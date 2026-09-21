@@ -2,6 +2,11 @@
 
 Read this when starting a new report, to copy the skeleton and fill it in.
 
+This skeleton is the **content plan** — what goes in the report and in what
+order. It is not the delivered form: the report is published as a designed HTML
+page, and how that page looks is in
+[Report Visual Style](report-visual-style.md).
+
 ---
 
 # <Report title — the subject, not the word "Report">
