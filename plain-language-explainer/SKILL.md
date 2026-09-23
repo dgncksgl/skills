@@ -1,6 +1,6 @@
 ---
 name: plain-language-explainer
-description: "Explain code changes (for example a .py diff), decisions, flows, errors, test output, plans, and results to the user in plain everyday language, with a concrete example behind every main idea. Use when the user asks how something works, what was done, why something failed, or says \"bana anlat\", \"bana açıkla\", \"anlatır mısın\", \"anlatsana\", \"kısaca anlat\", \"örnek vererek anlat\", \"detaylı anlat\", \"anlamadım tekrar anlat\", \"izah et\", \"explain this\", \"walk me through\". Applies to every explanation written in chat, whatever language the user writes in. Tables, code blocks, and file paths are allowed when they make the point clearer. Do not use when producing a report or a standalone document (use plain-language-reporter instead), when silently editing code or running commands, or when the user explicitly asks for a deep technical specification."
+description: "Explain code changes (for example a .py diff), decisions, flows, errors, test output, plans, and results to the user in plain everyday language, with a concrete example behind every main idea. Use when the user asks how something works, what was done, why something failed, or says \"bana anlat\", \"bana açıkla\", \"anlatır mısın\", \"anlatsana\", \"kısaca anlat\", \"örnek vererek anlat\", \"detaylı anlat\", \"anlamadım\", \"anlamıyorum\", \"anlaşılmıyor\", \"tekrar anlat\", \"izah et\", \"explain this\", \"walk me through\", \"I do not understand\", \"this is not clear\". Applies to every explanation written in chat, whatever language the user writes in. Tables, code blocks, and file paths are allowed when they make the point clearer. Do not use when producing a report or a standalone document (use plain-language-reporter instead), when silently editing code or running commands, or when the user explicitly asks for a deep technical specification."
 ---
 
 # Plain Language Explainer
@@ -57,9 +57,12 @@ Never buy brevity by dropping the example. Cut context, keep the example.
 
 - **"Detaylı anlat" (explain in more detail)** means more examples and smaller
   steps — not more terminology, longer sentences, or measurement dumps.
-- **"Anlamadım / tekrar anlat" (I did not understand)** means the previous
-  explanation failed. Do not repeat it at greater length. Change the angle, break
-  it into smaller pieces, and use a **new** example.
+- **"Anlamadım", "anlamıyorum", "anlaşılmıyor", "tekrar anlat", "I don't
+  understand", "not clear"** are not requests for more text. They mean the previous
+  explanation failed. Do not repeat it at greater length and do not bolt an
+  explanation onto the end of it. Start over: change the angle, break the idea into
+  smaller pieces, and use a **new** example — never the one that already did not land.
+  These phrases apply to anything just explained, not only to a question the user asked.
 
 ## Self-check before sending
 

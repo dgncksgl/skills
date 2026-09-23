@@ -1,6 +1,6 @@
 ---
 name: plain-language-reporter
-description: "Write reports, findings lists, analyses, and standalone Markdown (.md) documents in plain everyday language, with the conclusion on top, a concrete example inside every finding, and technical detail (file paths such as .py modules, line numbers, measurements) kept in an appendix. Use when the user asks for a report, asks to document findings or an investigation, asks for a written summary, or says \"bana rapor ver\", \"rapor oluştur\", \"rapor hazırla\", \"rapor yaz\", \"raporla\", \"bulguları raporla\", \"raporu güncelle\", \"doküman hazırla\", \"write a report\", \"document the findings\". Also covers how a long report is published as a designed HTML artifact (status colours, finding cards, light and dark mode) and kept up to date as decisions are made. Inherits every language rule from the plain-language-explainer skill. Do not use for a short answer inside chat (use plain-language-explainer), for commit messages, pull request descriptions, code comments, or docstrings."
+description: "Write reports, findings lists, analyses, and standalone Markdown (.md) documents in plain everyday language, with the conclusion on top, a concrete example inside every finding, and technical detail (file paths such as .py modules, line numbers, measurements) kept in an appendix. Use when the user asks for a report, asks to document findings or an investigation, asks for a written summary, or says \"bana rapor ver\", \"rapor oluştur\", \"rapor hazırla\", \"rapor yaz\", \"raporla\", \"bulguları raporla\", \"raporu güncelle\", \"doküman hazırla\", \"raporu anlamadım\", \"rapor anlaşılmıyor\", \"raporu tekrar yaz\", \"write a report\", \"document the findings\". Also covers publishing a long report as a designed HTML artifact and keeping it current. Inherits every language rule from the plain-language-explainer skill. Do not use for a short answer inside chat (use plain-language-explainer), for commit messages, pull request descriptions, code comments, or docstrings."
 ---
 
 # Plain Language Reporter
@@ -8,9 +8,9 @@ description: "Write reports, findings lists, analyses, and standalone Markdown (
 ## Overview
 
 A report is read by people who were not in the conversation, often by people who
-do not work in the code. It has to answer "what did we find and what should we
-do" before it proves anything. This skill defines the structure and the look;
-the writing style comes from **plain-language-explainer**, which applies in full.
+do not work in the code. It must answer "what did we find and what should we do"
+before it proves anything. This skill defines the structure and the look; the
+writing style comes from **plain-language-explainer**, which applies in full.
 
 ## Language
 
@@ -20,13 +20,17 @@ every claim, short sentences.
 
 Two differences from chat:
 
-- **A brevity trigger shortens the report itself.** When the user says "kısaca",
-  "shortly", "kısa tut" or similar (the list lives in the explainer's
+- **A brevity trigger shortens the report itself.** On "kısaca", "shortly",
+  "kısa tut" and similar (list in the explainer's
   [Brevity Triggers](../plain-language-explainer/references/brevity-triggers.md)),
-  write the short form: the Result, the findings in their four-line shape with
-  nothing added around them, and the open decisions. Drop the appendix and every
-  extra paragraph, and keep the whole thing to about one screen. Examples and
-  caveats are the two things brevity never buys — cut everything else first.
+  write only the Result, the findings in their four-line shape, and the open
+  decisions — no appendix, about one screen. Examples and caveats are what
+  brevity never buys; cut everything else first.
+- **"Anlamadım" means the report failed, not that it is too short.** When the
+  user says "raporu anlamadım", "rapor anlaşılmıyor", "tekrar yaz" or the same
+  in any language, rewrite it: new angle, smaller findings, **new** examples.
+  Never append an explanation to the end of the report that already did not land,
+  and never answer it by adding detail.
 - **Technical detail is not banned, it is relocated.** Paths, line numbers, and
   measurements belong in the appendix, where the reader who wants them goes.
 
@@ -62,23 +66,21 @@ One finding covers one problem. Over about eight lines, it is two findings.
 
 ### 3. Decisions needed
 
-Only if something has to be decided. Number the questions, give the options,
-mark the recommended one, and put a one-line shortcut at the top so the reader
-can answer everything at once: "If you agree with all: 1A 2B".
+Only if something has to be decided. Number the questions, give the options, mark
+the recommended one, and put a shortcut on top: "If you agree with all: 1A 2B".
 
 ### 4. Appendix
 
 File paths, line numbers, measurements, verification steps, raw output. Nothing
-above this section needs them.
+above needs them.
 
 ## Formatting
 
-Tables, code blocks, and images are all allowed and often the fastest way to make
-a finding land. The rules for keeping them readable are in
+Tables, code blocks, and images are allowed and often the fastest way to make a
+finding land; keep them readable per
 [Formatting Rules](../plain-language-explainer/references/formatting-rules.md).
-
-Add a **screenshot, diagram, or before/after image** whenever prose is doing
-poorly — a picture of the wrong output explains more than a paragraph about it.
+Add a screenshot or before/after image whenever prose is struggling — a picture
+of the wrong output beats a paragraph about it.
 
 ## Delivery
 
