@@ -18,7 +18,7 @@ Read the rules in `~/.claude/skills/plain-language-explainer/SKILL.md` and apply
 them to every line of the report: answer first, everyday words, an example behind
 every claim, short sentences.
 
-Two differences from chat:
+Three differences from chat:
 
 - **A brevity trigger shortens the report itself.** On "kısaca", "shortly",
   "kısa tut" and similar (list in the explainer's
@@ -31,11 +31,10 @@ Two differences from chat:
   in any language, rewrite it: new angle, smaller findings, **new** examples.
   Never append an explanation to the end of the report that already did not land,
   and never answer it by adding detail.
-- **Terms are not translated here either.** script, thread, cache, commit keep
-  their English form in headings, tables, and the appendix:
+- **Terms are not translated here either** — formal report prose is where this
+  slips. pool stays pool, not "havuz"; lock stays lock, not "kilit"; in headings
+  and table cells too, and even when the question came in Turkish:
   [Technical Terms](../plain-language-explainer/references/technical-terms.md).
-- **Technical detail is relocated, not banned.** Paths, line numbers, and
-  measurements live in the appendix.
 
 ## Structure
 
@@ -78,11 +77,10 @@ above needs them.
 
 ## Formatting
 
-Tables, code blocks, and images are allowed and often the fastest way to make a
-finding land; keep them readable per
+Tables, code blocks, and images are allowed; keep them readable per
 [Formatting Rules](../plain-language-explainer/references/formatting-rules.md).
-Add a screenshot or before/after image whenever prose is struggling — a picture
-of the wrong output beats a paragraph about it.
+Add a screenshot or before/after image whenever prose is struggling: a picture
+of the wrong output beats a paragraph.
 
 ## Delivery
 
