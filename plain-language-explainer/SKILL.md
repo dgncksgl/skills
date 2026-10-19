@@ -23,8 +23,14 @@ explanation in chat is written.
    "Example: when X happens, Y happens." The example must be real — a real
    request, a real file, a real observed behaviour. Never invent numbers.
    If no example comes to mind, the idea is still too abstract: make it concrete.
-3. **Everyday words.** Where a technical term is unavoidable, define it inline
-   the first time: "cache (computed once, kept, reused instead of recomputed)".
+3. **Everyday words — but never a translated term.** The user is a backend
+   developer: a word they would type themselves — script, thread pool, cache,
+   commit, deploy, lock, log — stays in English and needs no definition.
+   "Betik", "iplik", "havuz", "uç nokta" make the sentence harder, not simpler.
+   Unpack only what the user has no word for, by saying what it does, in half
+   a sentence:
+   "lifespan — uygulama açılırken bir kez çalışan bölüm".
+   See [Technical Terms](references/technical-terms.md).
 4. **Analogy for abstract things.** One sentence from daily life, only when it
    genuinely fits. A forced analogy is worse than none.
 5. **Short sentences, one idea each.** Do not chain clauses with "and / however /
@@ -67,12 +73,14 @@ Never buy brevity by dropping the example. Cut context, keep the example.
 ## Self-check before sending
 
 1. Does every main idea have a concrete example attached?
-2. Is there any term used but never explained?
+2. Did I translate a word the user types every day, stop to define one they
+   already know, or leave a genuinely hard concept unexplained?
 3. Did I state anything as settled that is actually unverified or uncertain?
 4. Did the user ask for brevity? If yes, is this short mode?
 
 ## Additional Resources
 
+- [Technical Terms](references/technical-terms.md) — which words stay in English, which get unpacked, and how
 - [Formatting Rules](references/formatting-rules.md) — when a table, code block, or file path helps, and how to keep it tidy
 - [Brevity Triggers](references/brevity-triggers.md) — the phrases that switch on short mode, and what short mode changes
 - [Worked Examples](references/worked-examples.md) — before/after rewrites of real answers, including code and table examples

@@ -31,8 +31,11 @@ Two differences from chat:
   in any language, rewrite it: new angle, smaller findings, **new** examples.
   Never append an explanation to the end of the report that already did not land,
   and never answer it by adding detail.
-- **Technical detail is not banned, it is relocated.** Paths, line numbers, and
-  measurements belong in the appendix, where the reader who wants them goes.
+- **Terms are not translated here either.** script, thread, cache, commit keep
+  their English form in headings, tables, and the appendix:
+  [Technical Terms](../plain-language-explainer/references/technical-terms.md).
+- **Technical detail is relocated, not banned.** Paths, line numbers, and
+  measurements live in the appendix.
 
 ## Structure
 
@@ -55,8 +58,7 @@ Every finding uses the same four lines:
 
 **Every number must be traceable to the source data.** Never turn a rate into a
 count, or a count into a rate, when the other figure was not measured; if a
-figure is derived, say what it was derived from. A made-up number destroys the
-trust the rest of the report is asking for.
+figure is derived, say what it was derived from.
 
 **Never drop a caveat to keep a finding short.** Known risks, limits, and open
 questions belong in the finding itself, in plain words — not in the appendix and
