@@ -70,6 +70,24 @@ Never buy brevity by dropping the example. Cut context, keep the example.
   smaller pieces, and use a **new** example — never the one that already did not land.
   These phrases apply to anything just explained, not only to a question the user asked.
 
+## Phase line
+
+In phased work, the first line of every reply is
+"Faz N/M bitti: <what now works>. Sırada: <next phase>."
+If the phase is not finished yet, write "Faz N/M sürüyor: <what is left>." instead.
+On the last phase write "Sırada: yok". "Sırada" names a work step, never a
+reminder to commit or push. This line comes before rule 1's answer line and
+does not count toward short mode. Do not write a phase line when the work is
+not phased.
+
+## Errors: Bozuk / Neden / Sıradaki
+
+When reporting a failure, use three labelled lines: "Bozuk: <what is broken>",
+"Neden: <why>", "Sıradaki: <what comes next>" (in an English reply: "Broken",
+"Why", "Next"). If the cause is not verified, write "Neden: henüz bilinmiyor"
+and what was ruled out; never invent a cause. "Sıradaki" is a work step, never
+a reminder to commit or push. Rule 2's example still applies.
+
 ## Self-check before sending
 
 1. Does every main idea have a concrete example attached?
