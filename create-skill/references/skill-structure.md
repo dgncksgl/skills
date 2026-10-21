@@ -6,22 +6,16 @@ Read this when scaffolding a new skill directory or deciding where to place cont
 
 ```
 ~/.claude/skills/<skill-name>/
-├── SKILL.md                    (spine — ≤2000 words, ideally ~1000-1200)
+├── SKILL.md                    (spine — ≤2000 words, ideally ≤1000)
 ├── references/
 │   ├── <topic-a>.md            (lookup tables, detailed examples, rule lists)
 │   └── <topic-b>.md
-└── scripts/
-    ├── <task>.sh               (deterministic logic, executables)
-    └── <other>.sh
+└── scripts/                    (only when there is deterministic logic)
+    ├── <task>.sh               (bash, executable)
+    └── <parser>.py             (python3 stdlib, executable, when parsing needs it)
 ```
 
-**Storage locations:**
-
-| Location | Purpose | Editable by skill? |
-|---|---|---|
-| `~/.claude/skills/<name>/` | Personal Claude skills | Yes |
-| `~/.cursor/skills-cursor/<name>/` | Cursor-reserved skills | **Never touch** |
-| `<project>/.claude/skills/<name>/` | Project-scoped skills | Yes |
+Storage locations are listed in SKILL.md.
 
 ## SKILL.md Skeleton
 
@@ -40,12 +34,11 @@ One paragraph. What it solves, primary languages/tools, when to reach for it.
 
 ### Step 1: ...
 ### Step 2: ...
-### Step N: Validate
-Run `bash scripts/validate.sh` (or equivalent) and confirm output.
+### Step N: Verify
+How to confirm the result is correct.
 
 ## Additional Resources
-- [Description Patterns](references/description-patterns.md) — trigger phrase examples
-- [Structure Guide](references/skill-structure.md) — directory layout
+- [<Topic>](references/<topic>.md) — when to read it
 ```
 
 ## Reference File Skeleton
@@ -78,7 +71,7 @@ TARGET="${1:-}"
 
 if [[ -z "$TARGET" ]]; then
   echo "Usage: $0 <target>" >&2
-  exit 1
+  exit 2
 fi
 
 # ... logic ...
@@ -94,18 +87,19 @@ fi
 | Detailed code examples | `references/` |
 | If/else chains ≥ 5 branches | `scripts/` |
 | Command dispatch (detect language, run tool) | `scripts/` |
-| Static lookup tables (rule IDs, file extensions) | `scripts/` or `references/` |
+| Lookup tables an agent reads (rule IDs) | `references/` |
+| Static data a script consumes (file extensions) | inside the script |
 | One-liner commands | SKILL.md inline |
 
 ## Word Budget for SKILL.md
 
 | Section | Target words |
 |---|---|
-| Frontmatter description | ~80 words |
+| Frontmatter description | as short as the mandatory elements allow (≤ 1024 chars) |
 | Overview | ~80 words |
 | Workflow steps (total) | ~500 words |
 | Storage / config notes | ~100 words |
 | Additional Resources list | ~50 words |
-| **Total** | **~810–1000 words** |
+| **Total** | **≤ 1000 words (ideal)** |
 
-Exceeding 1500 words is a warning. Exceeding 2000 words is a hard fail.
+Audit scores ≤ 1000 words 25/25, 1001–1500 20/25, 1501–2000 12/25. Validate fails above 2000 words.

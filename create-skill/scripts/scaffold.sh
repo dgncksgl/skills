@@ -45,8 +45,10 @@ done
 
 [[ -z "$SKILL_NAME" ]] && usage
 
-if ! [[ "$SKILL_NAME" =~ ^[a-z][a-z0-9-]{0,62}$ ]]; then
-  echo "ERROR: Skill name must match ^[a-z][a-z0-9-]{0,62}$ — got: '$SKILL_NAME'" >&2
+NAME_ERRORS=$(python3 "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/skill_lint.py" name "$SKILL_NAME" || true)
+if [[ -n "$NAME_ERRORS" ]]; then
+  echo "ERROR: invalid skill name:" >&2
+  echo "$NAME_ERRORS" | sed 's/^/  - /' >&2
   exit 1
 fi
 
@@ -54,19 +56,20 @@ LOCATION="${LOCATION%/}"
 SKILL_PATH="$LOCATION/$SKILL_NAME"
 
 RESOLVED_CURSOR="$(cd "$CURSOR_RESERVED" 2>/dev/null && pwd || echo "$CURSOR_RESERVED")"
-RESOLVED_SKILL="$(cd "$LOCATION" 2>/dev/null && echo "$LOCATION/$SKILL_NAME" || echo "$SKILL_PATH")"
+RESOLVED_SKILL="$(cd "$LOCATION" 2>/dev/null && echo "$(pwd -P)/$SKILL_NAME" || echo "$SKILL_PATH")"
+RESOLVED_CURSOR="$(cd "$RESOLVED_CURSOR" 2>/dev/null && pwd -P || echo "$RESOLVED_CURSOR")"
 
-if [[ "$RESOLVED_SKILL" == "$RESOLVED_CURSOR"* ]]; then
+if [[ "$RESOLVED_SKILL" == "$RESOLVED_CURSOR/"* ]]; then
   echo "ERROR: Cannot create skills inside Cursor-reserved directory: $CURSOR_RESERVED" >&2
   exit 1
 fi
 
 if [[ -d "$SKILL_PATH" ]] && [[ "$FORCE" == false ]]; then
-  echo "ERROR: '$SKILL_PATH' already exists. Use --force to overwrite." >&2
+  echo "ERROR: '$SKILL_PATH' already exists. Use --force to overwrite its SKILL.md (other files are kept)." >&2
   exit 1
 fi
 
-mkdir -p "$SKILL_PATH/references" "$SKILL_PATH/scripts"
+mkdir -p "$SKILL_PATH/references"
 
 cat > "$SKILL_PATH/SKILL.md" << SKILLMD
 ---
@@ -100,18 +103,15 @@ Run validation and confirm output is correct.
 
 ## Additional Resources
 
-TODO: Link reference files once created.
-- [Description Patterns](../create-skill/references/description-patterns.md)
-- [Skill Structure](../create-skill/references/skill-structure.md)
+TODO: Link each references/ file with one line saying when to read it, or delete this section.
 SKILLMD
 
 touch "$SKILL_PATH/references/.gitkeep"
-touch "$SKILL_PATH/scripts/.gitkeep"
 
 echo "SUCCESS: Skill scaffolded at $SKILL_PATH"
 echo ""
 echo "Next steps:"
 echo "  1. Edit $SKILL_PATH/SKILL.md — replace all TODO placeholders"
 echo "  2. Add reference files under $SKILL_PATH/references/"
-echo "  3. Add scripts under $SKILL_PATH/scripts/ (chmod +x each)"
+echo "  3. Only if needed: add scripts under $SKILL_PATH/scripts/ (chmod +x each)"
 echo "  4. bash $(dirname "$0")/validate-skill.sh $SKILL_PATH"

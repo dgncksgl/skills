@@ -19,32 +19,36 @@ Check whether long content is correctly offloaded:
 
 | Check | Points |
 |---|---|
-| No single table > 10 rows in SKILL.md | 5 |
-| No single list > 15 items in SKILL.md | 5 |
-| Detailed code examples are in references/ | 5 |
-| references/ directory exists and has ≥1 .md file | 5 |
+| Largest single table in SKILL.md has ≤ 10 data rows | 5 |
+| Largest single list (bulleted or numbered) in SKILL.md has ≤ 15 items | 5 |
+| SKILL.md has ≤ 3 code blocks (``` or ~~~); detailed examples are in references/ | 5 |
+| references/ has ≥1 .md file (N/A, full points, when SKILL.md is ≤ 1000 words and the three checks above pass: nothing needs offloading) | 5 |
+
+Tables and lists inside code blocks are examples, not content, and are not counted.
 
 ### 3. Scripts Token Efficiency — 20 points
 
 | Check | Points |
 |---|---|
-| scripts/ directory exists | 5 |
-| ≥1 script is executable (chmod +x) | 5 |
-| Deterministic logic (≥5 branches) moved to scripts/ | 10 |
+| Deterministic logic moved to scripts/: SKILL.md code blocks hold < 5 `if`/`elif`/`case` lines | 10 |
+| scripts/ contains ≥1 script | 5 |
+| Every script is executable (chmod +x) | 5 |
 
-If there is no deterministic multi-branch logic in the skill, award full 10 points by default.
+If SKILL.md has no deterministic multi-branch logic and the skill ships no scripts, the two script checks are N/A and score full points: an empty `scripts/` directory adds nothing.
 
 ### 4. Description Quality — 35 points
 
 | Check | Points |
 |---|---|
-| description field exists in frontmatter | 5 |
-| description ≤ 1024 characters | 5 |
+| description field exists in frontmatter and is text | 5 |
+| description ≤ 1024 characters (measured after YAML parsing) | 5 |
 | Contains "Use when" clause | 5 |
 | Contains "Do not use" clause (negative trigger) | 5 |
-| Contains ≥1 Turkish trigger phrase (ç/ğ/ı/ö/ş/ü chars present) | 5 |
-| Contains ≥1 English trigger phrase | 5 |
-| Contains ≥1 domain noun (tool name, file type, rule ID, framework) | 5 |
+| Contains ≥3 double-quoted Turkish trigger phrases (a phrase counts if it has Turkish letters ç/ğ/ı/ö/ş/ü or ends with a Turkish verb such as `yaz`, `et`) | 5 |
+| Contains an English trigger: a quoted English phrase, or ≥5 words of scenarios after "Use when" | 5 |
+| Contains ≥1 domain noun (tool name, file type, rule ID, `/command`, `--flag`, framework) | 5 |
+
+Not scored, but reported as WARN: the description appears to summarize the workflow (" then ", "→", "step N", "önce", "sonra", "ardından"). Keep steps in the body.
 
 ## Score Interpretation
 
@@ -79,7 +83,7 @@ Example: "See [Rules Reference](references/rules-reference.md) for full rule lis
 **No Turkish triggers:**
 ```
 [PRIORITY: HIGH] Turkish triggers
-Current: No Turkish characters found in description
+Current: Fewer than 3 double-quoted Turkish trigger phrases in description
 Fix: Add ≥3 TR trigger phrases with correct diacritics
 Example: 'or when user says "sonar sorunlarını çöz", "kod kokularını gider"'
 ```
@@ -100,10 +104,12 @@ Fix: Name the specific tool, file type, or rule ID
 Example: "Fix SonarQube rules S1172, S2095 in pom.xml projects"
 ```
 
-**scripts/ empty or missing:**
+**Inline branching logic:**
 ```
-[PRIORITY: LOW] Scripts
-Current: scripts/ directory is empty
-Fix: Move any ≥5-branch if/else logic from SKILL.md into a script
+[PRIORITY: MEDIUM] Scripts
+Current: SKILL.md code blocks contain ≥5 if/elif/case lines
+Fix: Move that logic into a script and call it with one line
 Example: language detection → scripts/detect-language.sh
 ```
+
+A skill without deterministic logic needs no `scripts/` directory; never add an empty one.

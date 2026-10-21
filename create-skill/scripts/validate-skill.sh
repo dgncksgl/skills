@@ -13,6 +13,7 @@ TARGET="${1:-}"
 [[ -z "$TARGET" ]] && usage
 
 TARGET="${TARGET%/}"
+LINT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/skill_lint.py"
 
 pass() {
   echo "  PASS: $1"
@@ -24,6 +25,31 @@ fail() {
   FAIL=$((FAIL + 1))
 }
 
+finish() {
+  echo ""
+  if [[ $FAIL -eq 0 ]]; then
+    echo "=== RESULT: PASS ($PASS passed, $FAIL failed) ==="
+    exit 0
+  fi
+  echo "=== RESULT: FAIL ($PASS passed, $FAIL failed) ==="
+  exit 1
+}
+
+field() {
+  python3 -c '
+import json, sys
+value = json.load(sys.stdin)
+for key in sys.argv[1:]:
+    value = value.get(key) if isinstance(value, dict) else None
+if isinstance(value, list):
+    print("\n".join(str(v) for v in value))
+elif isinstance(value, dict):
+    print("<map>")
+elif value is not None:
+    print(value)
+' "$@" <<< "$FM_JSON"
+}
+
 echo "=== Validating: $TARGET ==="
 echo ""
 
@@ -31,62 +57,66 @@ if [[ -f "$TARGET/SKILL.md" ]]; then
   pass "SKILL.md exists"
 else
   fail "SKILL.md not found"
-  echo ""
-  echo "RESULT: FAIL ($PASS passed, $FAIL failed)"
-  exit 1
+  finish
 fi
 
 SKILL_MD="$TARGET/SKILL.md"
+SKILL_ROOT="$(cd "$TARGET" && pwd)"
+FM_JSON=$(python3 "$LINT" frontmatter "$SKILL_MD")
 
-FRONT_START=""
-FRONT_END=""
-FRONT_START=$(grep -n "^---$" "$SKILL_MD" 2>/dev/null | head -1 | cut -d: -f1 || true)
-FRONT_END=$(grep -n "^---$" "$SKILL_MD" 2>/dev/null | awk 'NR==2{print $1}' FS=: || true)
+while IFS= read -r warning; do
+  [[ -n "$warning" ]] && echo "  WARN: $warning"
+done < <(field warnings)
 
-if [[ -n "$FRONT_START" ]] && [[ -n "$FRONT_END" ]]; then
-  pass "Frontmatter delimiters found (lines $FRONT_START to $FRONT_END)"
+FM_ERRORS=$(field errors)
+if [[ -z "$FM_ERRORS" ]]; then
+  pass "Frontmatter starts on line 1 and parses as YAML"
 else
-  fail "Frontmatter delimiters (---) missing or malformed"
+  while IFS= read -r error; do
+    fail "Frontmatter: $error"
+  done <<< "$FM_ERRORS"
 fi
 
-NAME_VAL=""
-if grep -qE "^name:" "$SKILL_MD" 2>/dev/null; then
-  NAME_VAL=$(grep -E "^name:" "$SKILL_MD" | head -1 | sed 's/^name:[[:space:]]*//')
-  if [[ -n "$NAME_VAL" ]]; then
-    pass "name field present: '$NAME_VAL'"
-  else
-    fail "name field present but empty"
-  fi
+NAME_VAL=$(field fields name)
+if [[ -z "$NAME_VAL" ]]; then
+  fail "name field missing or empty"
 else
-  fail "name field missing from frontmatter"
-fi
-
-if [[ -n "$NAME_VAL" ]]; then
-  NAME_CLEAN=$(echo "$NAME_VAL" | tr -d '"' | tr -d "'")
-  if [[ "$NAME_CLEAN" =~ ^[a-z][a-z0-9-]{0,62}$ ]]; then
-    pass "name matches regex ^[a-z][a-z0-9-]{0,62}$"
+  NAME_ERRORS=$(python3 "$LINT" name "$NAME_VAL" "$(basename "$SKILL_ROOT")" || true)
+  if [[ -z "$NAME_ERRORS" ]]; then
+    pass "name '$NAME_VAL' is valid and matches the directory"
   else
-    fail "name '$NAME_CLEAN' does not match regex ^[a-z][a-z0-9-]{0,62}$"
+    while IFS= read -r error; do
+      fail "$error"
+    done <<< "$NAME_ERRORS"
   fi
 fi
 
-DESC_RAW=""
-if grep -qE "^description:" "$SKILL_MD" 2>/dev/null; then
-  DESC_RAW=$(grep -E "^description:" "$SKILL_MD" | head -1 | sed 's/^description:[[:space:]]*//')
-  DESC_LEN=${#DESC_RAW}
+DESC_VAL=$(field fields description)
+if [[ -z "$DESC_VAL" || "$DESC_VAL" == "<map>" ]]; then
+  fail "description field missing, empty, or not a string"
+else
+  DESC_LEN=$(field description_length)
   if [[ $DESC_LEN -le 1024 ]]; then
     pass "description length OK ($DESC_LEN chars <= 1024)"
   else
     fail "description too long ($DESC_LEN chars > 1024)"
   fi
-  if echo "$DESC_RAW" | grep -qi "use when"; then
+  if grep -qE "<[A-Za-z/][^>]*>" <<< "$DESC_VAL"; then
+    fail "description contains XML/HTML tags"
+  else
+    pass "description has no XML tags"
+  fi
+  if grep -qi "use when" <<< "$DESC_VAL"; then
     pass "description contains 'Use when' clause"
   else
     fail "description missing 'Use when' clause"
   fi
+fi
+
+if grep -qE "^TODO:|TODO: <" "$SKILL_MD"; then
+  fail "scaffold TODO placeholders remain"
 else
-  fail "description field missing from frontmatter"
-  fail "description missing 'Use when' clause (cannot check -- no description)"
+  pass "No scaffold TODO placeholders"
 fi
 
 WORD_COUNT=$(wc -w < "$SKILL_MD" | tr -d ' ')
@@ -97,20 +127,22 @@ else
 fi
 
 BROKEN_REFS=0
-while IFS= read -r line; do
-  ref=$(echo "$line" | grep -oE '\(references/[^)]+\.md\)' | tr -d '()' || true)
-  if [[ -n "$ref" ]]; then
-    if [[ ! -f "$TARGET/$ref" ]]; then
-      echo "  WARN: Broken reference link -> $ref"
-      BROKEN_REFS=$((BROKEN_REFS + 1))
-    fi
+while IFS= read -r ref; do
+  [[ -z "$ref" ]] && continue
+  [[ "$ref" =~ ^(https?:|mailto:|#) ]] && continue
+  path="${ref%%#*}"
+  if [[ ! -e "$SKILL_ROOT/$path" ]]; then
+    echo "  WARN: Broken link -> $ref"
+    BROKEN_REFS=$((BROKEN_REFS + 1))
+  elif [[ "$(cd "$(dirname "$SKILL_ROOT/$path")" && pwd)/" != "$SKILL_ROOT/"* ]]; then
+    echo "  WARN: Link points outside the skill directory (breaks if the skill is moved alone) -> $ref"
   fi
-done < "$SKILL_MD"
+done < <(python3 "$LINT" stats "$SKILL_MD" | python3 -c 'import json, sys; print("\n".join(json.load(sys.stdin)["links"]))')
 
 if [[ $BROKEN_REFS -eq 0 ]]; then
-  pass "No broken reference links"
+  pass "All relative links resolve"
 else
-  fail "$BROKEN_REFS broken reference link(s) found"
+  fail "$BROKEN_REFS broken link(s) found"
 fi
 
 SCRIPTS_DIR="$TARGET/scripts"
@@ -129,14 +161,7 @@ fi
 if [[ $NON_EXEC -eq 0 ]]; then
   pass "All scripts are executable"
 else
-  fail "$NON_EXEC script(s) not executable (run: chmod +x $SCRIPTS_DIR/*.sh)"
+  fail "$NON_EXEC script(s) not executable (run: chmod +x $SCRIPTS_DIR/*)"
 fi
 
-echo ""
-if [[ $FAIL -eq 0 ]]; then
-  echo "=== RESULT: PASS ($PASS passed, $FAIL failed) ==="
-  exit 0
-else
-  echo "=== RESULT: FAIL ($PASS passed, $FAIL failed) ==="
-  exit 1
-fi
+finish

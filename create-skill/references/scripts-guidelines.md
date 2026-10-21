@@ -1,6 +1,6 @@
 # Scripts Guidelines
 
-Read this when deciding whether logic belongs in a script or in SKILL.md prose, or when writing a new bash script for a skill.
+Read this when deciding whether logic belongs in a script or in SKILL.md prose, or when writing a new script for a skill. Prefer bash; use python3 with the standard library only when parsing (YAML, JSON, Markdown) needs it. Keep it Python 3.9-compatible (macOS system python3): no `tomllib`, so read the few TOML keys you need with a regex.
 
 ## Why Scripts Are (Almost) Free
 
@@ -22,10 +22,10 @@ A script with a 5-line output costs ~60 tokens total. Equivalent SKILL.md prose 
 | Detect project language from 6+ file checks | Yes |
 | Enumerate files matching a pattern | Yes |
 | Run a tool and capture structured output | Yes |
-| Static lookup table (>15 rows) | Yes |
+| Static data the script itself consumes | Yes (keep it inside the script) |
 | Command dispatch (run mvn / gradle / pytest based on context) | Yes |
 | Single one-liner that fits in a sentence | No — inline in SKILL.md |
-| Decision with 2-3 branches, no file I/O | No — prose is clearer |
+| Decision with ≤4 branches | No — prose is clearer |
 | Human-readable explanation of a concept | No — keep in SKILL.md or references/ |
 
 ## Bash Portability (macOS + Linux)
@@ -51,8 +51,8 @@ wc -w < "$file" | tr -d ' '
 # grep -E for extended regex (both platforms)
 grep -E "pattern" file
 
-# Avoid GNU-only flags: --color=always, -P (Perl regex), etc.
-# Use find -name, not find -iname when case doesn't matter
+# Avoid GNU-only flags: --color=always, grep -P (Perl regex), sed -i without a suffix argument
+# macOS ships bash 3.2: no associative arrays, no ${var,,}, no mapfile
 ```
 
 ## Script Header Template
@@ -66,7 +66,7 @@ TARGET="${1:-}"
 
 if [[ -z "$TARGET" ]]; then
   echo "Usage: $0 <target-path>" >&2
-  exit 1
+  exit 2
 fi
 ```
 
@@ -83,11 +83,14 @@ fi
 | 2 | Usage error (wrong args) |
 | 3+ | Tool-specific error |
 
-Always write human-readable status to **stdout**, errors/warnings to **stderr**.
+A detection script that finds nothing is not a failure: print a clear "none found" line on stdout and exit 0, or exit 1 if the caller must branch on it; document which in SKILL.md.
+
+Write check results (PASS / FAIL / WARN lines) to **stdout**, so the agent reads them as the script's output. Write usage and runtime errors to **stderr**.
 
 ```bash
-echo "PASS: description length OK (${len} chars)" 
-echo "FAIL: SKILL.md exceeds 2000 words (${wc} found)" >&2
+echo "  PASS: description length OK (${len} chars)"
+echo "  FAIL: SKILL.md exceeds 2000 words (${wc} found)"
+echo "Usage: $0 <skill-path>" >&2
 ```
 
 ## Execute vs Read-as-Reference
