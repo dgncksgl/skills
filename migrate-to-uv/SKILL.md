@@ -1,195 +1,88 @@
 ---
 name: migrate-to-uv
-description: >-
-  Migrate any Python project from pip, Poetry, Pipenv, or Conda to the uv
-  package manager. Detects the current source, converts dependency
-  configuration to a PEP 621 `pyproject.toml`, installs with `uv sync`,
-  verifies the project still runs, and updates CI workflows.
-  Use when the user asks (in English or Turkish) to "migrate to uv",
-  "switch to uv", "convert to uv", "set up uv",
-  "poetry'den uv'ye geç", "pip'ten uv'ye geç", "pipenv'den uv'ye geç",
-  "conda'dan uv'ye geç", "paket yöneticisini uv'ye çevir",
-  "uv'ye geçiş yap", "uv package manager'a geçir",
-  "dependency yönetimini uv'ye taşı".
-  Do not use for creating a brand-new Python project from scratch (use
-  `uv init` directly), for upgrading an already-uv project, or for
-  migrating to tools other than uv (rye, pdm, hatch).
+description: "Migrates an existing Python project from pip, pip-tools, Poetry, Pipenv, setuptools or Conda to the uv package manager without losing pinned versions, private indexes or CI setup. Use when the user asks to migrate, switch or convert a project to uv, replace requirements.txt, poetry.lock or Pipfile with pyproject.toml and uv.lock, or says \"uv'ye geç\", \"uv'ye geçiş yap\", \"poetry'den uv'ye geç\", \"pip'ten uv'ye geç\", \"pipenv'den uv'ye geç\", \"conda'dan uv'ye geç\", \"paket yöneticisini uv'ye çevir\", \"dependency yönetimini uv'ye taşı\", \"migrate to uv\", \"switch to uv\". Do not use for a brand-new project (run uv init), for upgrading or fixing a project already on uv, or for migrating to rye, pdm or hatch."
 ---
 
-# Migrate Python Project to uv
+# Migrate to uv
 
-Detect the current package manager, convert all dependency configuration to a uv-compatible `pyproject.toml` (PEP 621), install dependencies with `uv sync`, and verify the project still runs.
+## Overview
+
+Moves a project to uv with deterministic tools (Step 3); hand conversion only where none fits.
+
+## Core Rules
+
+- Keep versions: never loosen a pin; never pass `--ignore-locked-versions` unless the user agrees after a lock failure.
+- Ask first before: installing or updating uv, migrating with a dirty git tree, deleting any file or pyproject table (except the skill's temp files), adding a dependency the old setup did not declare, changing the target Python, and choosing between managers or a workspace layout.
+- Never commit or push. Git is the undo; with no git, copy pyproject.toml and the old manager files to the session scratchpad before Step 3.
+- Never copy a credential into a file. Report each `credentials` hit (`file:line`) without its value; if git tracks that file, the user must rotate it.
+- One project per run: the named directory, else the current one. `subprojects` not `none` → ask which project, and whether to use a uv workspace.
 
 ## Workflow
 
-```
-- [ ] Step 1: Detect current package manager
-- [ ] Step 2: Detect Python version
-- [ ] Step 3: Install uv (if missing)
-- [ ] Step 4: Convert dependencies
-- [ ] Step 5: Create supporting files
-- [ ] Step 6: uv sync
-- [ ] Step 7: Clean up old files
-- [ ] Step 8: Verify
-- [ ] Step 9: Update CI (if applicable)
-- [ ] Step 10: Report summary
-```
+### Step 1: Inspect
 
----
+Run `python3 <skill-dir>/scripts/inspect-project.py <project-dir>` (`<skill-dir>`: this skill's base directory, usually `~/.claude/skills/migrate-to-uv`). Route on its `key=value` facts. Re-run after Step 3: `mixed` or `uv` is expected; continue without asking.
 
-## Step 1 — Detect Current Package Manager
+### Step 2: Preconditions
 
-```bash
-bash scripts/detect-source.sh
-```
+- `uv` missing → ask; offer `brew install uv` or `curl -LsSf https://astral.sh/uv/install.sh | sh` (then `source $HOME/.local/bin/env`).
+- `uv` older than 0.13.7 (tested, not a known minimum) → note it; do not ask. A uv command fails on an unknown option → ask to update (`uv self update`, Homebrew: `brew upgrade uv`), retry.
+- `git=dirty` → ask: commit, stash or back up.
+- `python=unknown` → ask which Python to target; never assume the system one. `python_from` is a Dockerfile, CI file or `.venv` → propose that version and ask.
+- `uv python list <python>` prints nothing → uv has no build for it: ask for a newer target.
 
-Output is one of: `uv`, `poetry`, `pipenv`, `conda`, `pip`, `unknown`.
+### Step 3: Convert (route on `source`)
 
-- `uv` → Already migrated. Inform the user and stop.
-- `unknown` → Ask the user which manager is in use, or manually inspect the repo.
+| `source` | Action |
+|---|---|
+| `uv` | Already migrated: stop |
+| `mixed` | Ask which manager is authoritative, then take its row (converter managers: `--package-manager <name>`; PDM: unsupported) |
+| `poetry`, `pipenv`, `pip-tools` | Converter: `uvx migrate-to-uv@0.12.0 --dry-run <flags> <dir>`, then `uvx migrate-to-uv@0.12.0 --keep-current-data <same flags> <dir>` (deletes nothing) |
+| `pip` | `uv add --raw -r` route below |
+| `pep621` | Fix `req_options`; `dev_requirements` → dev group; `uv lock` |
+| `setuptools` | [Manual Conversion](references/manual-conversion.md) |
+| `conda` | [Conda to uv](references/conda-to-uv.md) |
+| `unknown` | Ask the user what manages dependencies (PDM lands here: unsupported) |
 
-## Step 2 — Detect Python Version
+**Project table first:** pip route with no `pyproject.toml` → `uv init --bare --name <suggested_name> --python <python>`. A `pyproject.toml` without `[project]` (tool settings only; `uv init` refuses it), or the converter route with `project_name=missing` → write `[project]` by hand with only `name = "<suggested_name>"`, `version = "0.1.0"`, `requires-python = ">=<python>"`. No `uv init`, no `dependencies` key: the converter keeps `dependencies = []` and silently drops all runtime dependencies.
 
-```bash
-bash scripts/detect-python-version.sh
-```
+**pip route:** first write the `-c` constraints and index lines from `req_options` into pyproject.toml (first resolve needs them; `private_index=yes` with no index or `-f` line there → take it from pip.conf, uv.toml or the CI's `PIP_INDEX_URL`), then `uv add --raw -r <file>` for runtime files and `uv add --raw --group dev -r <file>` for files in `dev_requirements`. Skip a file another listed file pulls in with `-r` (`uv add -r` follows it). A `pip freeze` file (every line `==`, transitive packages too) → ask which packages are direct, then `uv add --raw <them> -c <file>` (pins kept, the rest stay transitive). A dev file that `-r`s a runtime file, or a file with `-e` or local-path lines (they break `--raw`): follow the [Converter Guide](references/converter-guide.md).
 
-Output is a version string like `3.13`. Store as `DETECTED_PYTHON`. If `unknown`, ask the user which Python version to target.
+**Converter route:** Poetry with a `[build-system]`: read Build backend in the Converter Guide first. Check the preview: all dependencies and groups present, no range wider. After hand-fixing `req_options`, `uv lock` again. Files in `dev_requirements` the converter did not read (Poetry, Pipenv; pip-tools without `--dev-requirements-file`) → `uv add --raw --group dev -r <file>` (a pip-tools `.in`: add `-c <its compiled .txt>`), or Step 7 loses them. Flags, fixes, warnings, lock errors: [Converter Guide](references/converter-guide.md).
 
-## Step 3 — Install uv
+### Step 4: Supporting files
 
-```bash
-uv --version 2>/dev/null || {
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    source "$HOME/.local/bin/env"
-}
-uv --version
-```
+- No `.python-version` → `uv python pin <python>`; refused (patch floor like `>=3.8.1`) → pin the newest patch from `uv python list <python>`.
+- `.gitignore` has `.venv/` (add it if missing), never `uv.lock`.
 
-## Step 4 — Convert Dependencies
+### Step 5: Install and verify
 
-Open only the reference that matches the detected source. Each reference contains full section mapping, version syntax conversion, and the list of files to delete in Step 7:
+1. `uv sync`; failures: Converter Guide (pins stay).
+2. Compare direct-dependency versions in `uv.lock` with the old ones.
+3. `uv run <test command>`; with no tests, import each top-level dependency and run console scripts with `--help`.
+4. A missing import in the old lock → the migration lost it: fix it. Not in it → pre-existing gap: ask before adding. Step 5 passes when nothing the migration caused fails.
 
-| Detected source | Reference |
-|-----------------|-----------|
-| `pip`           | [references/pip-to-uv.md](references/pip-to-uv.md)     |
-| `poetry`        | [references/poetry-to-uv.md](references/poetry-to-uv.md) |
-| `pipenv`        | [references/pipenv-to-uv.md](references/pipenv-to-uv.md) |
-| `conda`         | [references/conda-to-uv.md](references/conda-to-uv.md)   |
+### Step 6: CI and Docker
 
-Apply the conversion to produce a target `pyproject.toml`.
+For each file in `ci` (skip files inside a subproject this run does not migrate), replace the old manager's steps per [CI Updates](references/ci-updates.md): project's Python, pinned uv, same extras and groups; show the diff. A Dockerfile takes the whole template, `ENV` line included (`UV_NO_DEV=1` keeps dev tools out of the image). Then README, docs and scripts: `git grep -n -e pipenv -e poetry -e "pip install" -e "requirements.*\.txt"`, and update each hit per Other files in CI Updates. Project in a subfolder of a git repo: `ci` covers only that folder, so also update the repo root's CI files that name the folder (from the project folder: `git grep -l <folder>/ -- ':/.github/*' ':/.gitlab-ci.yml'`).
 
-## Step 5 — Create Supporting Files
+### Step 7: Clean up (only after Step 5 passed)
 
-**`.python-version`** (create or overwrite with the detected version):
+List the old files (`lockfiles` except `uv.lock`, `Pipfile`, `poetry.toml`, every file in `requirements` and their `-r`/`-c` files; Conda: `environment.yml` per the Conda guide) and `[tool.poetry*]` tables. Ask; delete exactly what the user approves (all, some or none). `uv export --no-hashes -o requirements.txt` regenerates one. With a `[build-system]`, follow Build backend in the Converter Guide before touching `[tool.poetry*]`: poetry-core < 2 needs them all. Keep files the build reads (`[tool.setuptools.dynamic]`, a kept `setup.py`). Declined → both remain. Step 5 failed → delete nothing.
 
-```
-{DETECTED_PYTHON}
-```
+### Step 8: Report
 
-**`.gitignore`** — ensure these entries exist (append if missing, do not duplicate):
-
-```
-.venv/
-__pycache__/
-*.pyc
-.env
-.env.*
-!.env.example
-```
-
-`uv.lock` must **not** appear in `.gitignore` — it is committed for reproducible builds.
-
-## Step 6 — Install Dependencies
-
-```bash
-rm -rf .venv
-uv sync
-```
-
-If `uv sync` fails, read the error and apply one of:
-
-- Package not found → verify the name on PyPI; adjust in `pyproject.toml`.
-- Version conflict → loosen constraints.
-- Python version mismatch → update `requires-python`, or install the correct Python: `uv python install {DETECTED_PYTHON}`.
-
-Re-run `uv sync` until it succeeds. Verify the lock file was produced:
-
-```bash
-ls -la uv.lock
-```
-
-## Step 7 — Clean Up Old Files
-
-Delete the files listed under "Files to Delete" in the reference used in Step 4. Do not delete files until Step 6 succeeded.
-
-## Step 8 — Verify
-
-Run an import smoke test using the project's top-level dependencies:
-
-```bash
-uv run python -c "import <main_dep_1>; import <main_dep_2>; print('imports OK')"
-```
-
-Replace `<main_dep_*>` with the actual top-level import names from the dependency list.
-
-If the project has an entry point (e.g. `main.py`):
-
-```bash
-uv run python main.py --help 2>/dev/null \
-    || uv run python -c "import main; print('entry point OK')"
-```
-
-## Step 9 — Update CI (if applicable)
-
-If the repo contains `.github/workflows/`, `Jenkinsfile`, `.gitlab-ci.yml`, `bitbucket-pipelines.yml`, or a `Dockerfile`, update them. See [references/ci-updates.md](references/ci-updates.md) for per-system templates.
-
-## Step 10 — Report Summary
-
-```
-Migration Complete: {SOURCE} → uv
-
-Files created:
-  - pyproject.toml (created/updated)
-  - .python-version
-  - uv.lock
-  - .venv/
-
-Files deleted:
-  - {list}
-
-Packages installed: {count}
-Python version: {DETECTED_PYTHON}
-
-Quick reference:
-  uv sync                    - install / update dependencies
-  uv add <package>           - add a dependency
-  uv add --group dev <pkg>   - add a dev dependency
-  uv remove <package>        - remove a dependency
-  uv run python <script>     - run a script
-  uv run pytest              - run tests
-  uv lock --upgrade          - upgrade all packages
-```
-
----
-
-## Edge Cases
-
-- **Monorepo / workspace** — If multiple `pyproject.toml` files exist, ask the user which project to migrate before proceeding.
-- **Private PyPI** — `--index-url` / `--extra-index-url` go into `[tool.uv]`:
-
-  ```toml
-  [tool.uv]
-  index-url = "https://private.pypi.org/simple/"
-  extra-index-url = ["https://pypi.org/simple/"]
-  ```
-
-- **Git / URL dependencies** — `"pkg @ git+https://github.com/org/repo.git@tag"` in `dependencies`.
-- **Python not installed** — `uv python install {DETECTED_PYTHON}` before Step 6.
-
----
+In the user's language:
+1. `<source> → uv`, Python, packages in `uv.lock`.
+2. Files created, changed, deleted and kept, CI included.
+3. Version differences, hand-carried `req_options`, converter warnings, `credentials` hits (`none` only means no pattern matched in the scanned files; say so).
+4. Test result and pre-existing failures.
+5. Each Ask-first decision, its answer, and whether it was asked or given up front.
+6. Open decisions; nothing committed; commit `uv.lock` for `--locked`.
 
 ## Additional Resources
 
-- Per-source conversion rules: [references/pip-to-uv.md](references/pip-to-uv.md), [references/poetry-to-uv.md](references/poetry-to-uv.md), [references/pipenv-to-uv.md](references/pipenv-to-uv.md), [references/conda-to-uv.md](references/conda-to-uv.md)
-- CI / Docker updates: [references/ci-updates.md](references/ci-updates.md)
+- [Converter Guide](references/converter-guide.md): flags, build backend, errors
+- [Manual Conversion](references/manual-conversion.md): setuptools, converter failures
+- [Conda to uv](references/conda-to-uv.md): environment.yml, conda-only packages
+- [CI Updates](references/ci-updates.md): CI systems, Docker, index secrets
