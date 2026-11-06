@@ -77,7 +77,7 @@ def classify_user_entry(entry):
     text = text_of((entry.get("message") or {}).get("content")).strip()
     if not text:
         return None, ""  # tool results only
-    command = COMMAND_RE.search(text)
+    command = COMMAND_RE.search(text) if text.startswith(("<command-message>", "<command-name>")) else None
     if command:
         name = command.group(1)
         if not name.startswith("/"):
@@ -123,12 +123,20 @@ def build(path):
             continue
         if entry.get("isSidechain"):
             continue
+        attachment = entry.get("attachment") if kind == "attachment" else None
+        if isinstance(attachment, dict) and attachment.get("type") == "queued_command":
+            # a prompt typed while Claude was still working
+            if attachment.get("commandMode") != "prompt" or attachment.get("isMeta"):
+                continue
+            kind, entry = "user", {"message": {"content": attachment.get("prompt")}}
         if kind == "user":
             ukind, text = classify_user_entry(entry)
             if ukind == "summary":
                 summaries.append(text)
+                current = new_segment("summary", "")
+                segments.append(current)
             elif ukind:
-                last = segments[-1] if segments else None
+                last = next((s for s in reversed(segments) if s["kind"] != "summary"), None)
                 if last and last["kind"] == ukind and last["text"] == text and last["tools"] == 0:
                     continue  # the same prompt resent, or a typed command echoed as an entry
                 current = new_segment(ukind, text)
@@ -144,8 +152,9 @@ def build(path):
                     continue
                 current["tools"] += 1
                 name, args = part.get("name", ""), part.get("input") or {}
-                if name in EDIT_TOOLS and args.get("file_path"):
-                    current["edits"].append(args["file_path"])
+                edited = args.get("file_path") or args.get("notebook_path")
+                if name in EDIT_TOOLS and edited:
+                    current["edits"].append(edited)
                 elif name == "Skill" and args.get("skill"):
                     current["skills"].append(args["skill"])
                 elif name in ("Agent", "Task"):
@@ -183,7 +192,16 @@ def render(path, segments, titles, summaries, prompt_chars):
                    % (len(summaries), one_line(latest, 1200)))
     out.append("")
     out.append("## Timeline (#, work after the prompt, prompt; last line = the request that invoked this skill)")
-    for number, seg in enumerate(segments, 1):
+    number = marker = 0
+    for index, seg in enumerate(segments):
+        if seg["kind"] == "summary":
+            marker += 1
+            where = ("its summary recaps the lines above" if index
+                     else "this transcript starts here; its summary covers work done before it")
+            work = " (work after it: tools=%d)" % seg["tools"] if seg["tools"] else ""
+            out.append("--- compaction %d of %d: %s%s ---" % (marker, len(summaries), where, work))
+            continue
+        number += 1
         work = "tools=%d" % seg["tools"]
         if seg["edits"]:
             names = sorted({os.path.basename(p) for p in seg["edits"]})

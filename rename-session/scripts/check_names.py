@@ -15,7 +15,7 @@ MAX_LEN = 40
 def problem(name):
     if len(name) > MAX_LEN:
         return "too long: %d characters, limit %d" % (len(name), MAX_LEN)
-    if not NAME_RE.match(name):
+    if not NAME_RE.fullmatch(name):
         return "not lowercase a-z/0-9 kebab-case"
     return None
 
