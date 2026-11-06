@@ -133,8 +133,9 @@ def build(path):
             ukind, text = classify_user_entry(entry)
             if ukind == "summary":
                 summaries.append(text)
-                current = new_segment("summary", "")
-                segments.append(current)
+                segments.append(new_segment("summary", ""))
+                if current is None:  # transcript starts with the summary
+                    current = segments[-1]
             elif ukind:
                 last = next((s for s in reversed(segments) if s["kind"] != "summary"), None)
                 if last and last["kind"] == ukind and last["text"] == text and last["tools"] == 0:
