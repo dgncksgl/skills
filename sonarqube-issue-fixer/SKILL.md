@@ -1,230 +1,80 @@
 ---
 name: sonarqube-issue-fixer
-description: >-
-  Scan project source code for SonarQube rule violations (bugs, vulnerabilities,
-  code smells, security hotspots, cyclomatic / cognitive complexity) and fix
-  them automatically. Language-agnostic: Java, Kotlin, Python, TypeScript,
-  JavaScript, Go, C#, Ruby, PHP, Scala, Rust, Swift.
-  Use when the user asks (in English or Turkish) to "fix sonar warnings",
-  "resolve code smells", "clean up static analysis", "reduce cyclomatic or
-  cognitive complexity", "improve code quality", "fix SonarQube issues",
-  "sonar sorunlarını çöz", "sonar uyarılarını düzelt",
-  "sonarqube issue'larını çöz", "kod kokularını gider",
-  "statik analiz uyarılarını temizle", "kod kalitesini artır",
-  "karmaşıklığı azalt", or references a Sonar rule ID such as S1854,
-  S1192, S3776, S2095, S2068.
-  Use proactively after a SonarQube / SonarCloud report is shared or after
-  an implementation/refactor step completes.
-  Do not use for pure formatting, import sorting, single-file typo fixes,
-  or for editing config/markup files (XML, YAML, JSON, Markdown).
+description: "Finds and fixes SonarQube issues (bugs, vulnerabilities, code smells, cognitive complexity) in Python, Java, Kotlin, JavaScript, TypeScript, Go, C# and other languages, using a SonarQube report or pinned local analyzers mapped to Sonar rule IDs, without changing behaviour. Use when the user asks to fix Sonar warnings or SonarQube/SonarCloud issues, clean up static analysis, reduce cognitive or cyclomatic complexity, shares a Sonar report, names a rule ID such as S1192, S3776, S2068 or S1481, or says \"sonar sorunlarını çöz\", \"sonar uyarılarını düzelt\", \"sonarqube issue'larını çöz\", \"kod kokularını gider\", \"statik analiz uyarılarını temizle\", \"karmaşıklığı azalt\", \"bütün projede sonar'ı düzelt\". Use proactively after an implementation or refactor step, on the changed files only. Do not use for pure formatting or import ordering, for IDE type warnings (type-safety-fixer), for a security audit of pending changes (/security-review), or for editing config or markup files (XML, YAML, JSON, Markdown)."
 ---
 
 # SonarQube Issue Fixer
 
-Detect and fix SonarQube rule violations across any programming language. Operate only on first-party source code; never modify generated code, config, markup, build output, or dependency directories.
+## Overview
+
+Fixes Sonar findings that a SonarQube report or a pinned analyzer produced. Code is read for findings only through the manual checklist, for languages the tools do not cover. Scripts live in `<skill-dir>/scripts/` (`<skill-dir>`: this skill's base directory, usually `~/.claude/skills/sonarqube-issue-fixer`); run them with `python3`.
+
+## Core Rules
+
+- Evidence first: a rule not in the analyzer output, the Sonar report or your checklist notes is not a finding.
+- Preserve behaviour: same inputs, outputs, exceptions, log text, and the names and signatures that code outside the file uses. The one planned exception is S5754 (bare `except:` or `except BaseException:` → `except Exception:`), see Fix Recipes. Minimal change, one finding per edit, match the file's style, no new finding.
+- Never silence a finding (`NOSONAR`, `# noqa`, `@SuppressWarnings`, `eslint-disable`, renaming to dodge a detector), even when the user asks: explain, leave the code, and report the finding as not fixed by the user's decision. A false positive goes in the report with its reason.
+- No bulk find-and-replace: read each site before editing it. One constant per meaning, not per spelling.
+- `check-api` findings: grep the whole project for the name (tests count as callers). Fix only when no caller outside the file, no framework and no override depends on it; a signature a framework or base class requires (pytest fixture, interface method, a handler parameter the framework fills) is a false positive; anything else is a decision.
+- Decisions: blocking questions are asked when they arise, before any edit (dirty tree for `--scope all`, PMD install when analyze asks for it, missing `SONAR_TOKEN`). All other decisions (`ask` findings, `check-api` decisions, fixes that would change behaviour) are collected and asked once, in the Step 7 report; approved items are fixed in a follow-up run of Steps 3–6.
+- Edit only files in the scope (for a Sonar report: the report's files). Dependency directories may be read, never written.
+- Never commit, push, stash or reset. Never run an analysis that uploads to a shared SonarQube server (`mvn sonar:sonar`, `sonar-scanner`); reading its Web API is fine.
+- `SONAR_TOKEN` comes from the environment; never print it, write it to a file or ask for it in chat. Report `credential=` lines from inspect by location only.
 
 ## Workflow
 
-```
-- [ ] Step 1: Detect project language(s) and version
-- [ ] Step 2: List scannable source files
-- [ ] Step 3: Scan for violations (by category)
-- [ ] Step 4: Apply fixes
-- [ ] Step 5: Validate and report
-```
+### Step 1: Inspect and choose the scope
 
----
+Run `python3 <skill-dir>/scripts/sonar-fix.py inspect <project-dir> <flags> --out <scratchpad>/scope.txt`:
 
-## Step 1 — Detect Language and Version
+| The user said | Flags |
+|---|---|
+| Nothing (proactive run, "fix sonar issues") | none: `--scope changed`, uncommitted files plus branch commits since the default branch (`default_branch=unknown` or another base such as `develop` → add `--base <branch>`, a local or remote name such as `origin/develop`) |
+| "Whole project", "bütün projede", "tüm proje" | `--scope all` |
+| Named files or folders | `--paths <p> ...` |
 
-Run:
+Test files inside the scope are kept; `analyze` applies only the rules Sonar runs on tests. `scope_files=0` → say there is nothing to fix and offer `--scope all`. `error=` (no git) → ask for `--scope all` or `--paths`. `git=dirty:<n>` with `--scope all` → ask the user to commit or stash first; if they decline, save `git diff HEAD` and `git status --porcelain --untracked-files=all` to the scratchpad before editing, and report your edits apart from theirs. Each `module=` line holds that module's `build` and `test` commands, run inside its directory. `generated_files=` lists files left out as generated; append a clearly hand-written one to the scope list.
 
-```bash
-bash scripts/detect-language.sh
-```
+### Step 2: Collect findings
 
-Each output line is `<language> <version>`. Multiple lines indicate a polyglot repo — process each language independently.
+- **Sonar report given:** API or JSON export → fetch and convert it per [Tools](references/tools.md); a list pasted from the UI → use it as the findings list. Then run inspect again with `--paths <the report's files>`: that list, with any report file it leaves out appended (the server analyzed it), is the scope for Steps 3–6. No token, or the server is unreachable → say so and offer the local `analyze` instead.
+- **No report:** run `python3 <skill-dir>/scripts/sonar-fix.py analyze <project-dir> --files-from <scratchpad>/scope.txt --out <scratchpad>/findings.json`. The first run downloads the pinned uvx and npm analyzers into the cache on its own; only PMD asks first.
+  - `note=java: PMD is not installed` → ask once per session; yes → `sonar-fix.py install-pmd` and analyze again; no → continue.
+  - `review=<language>` (and Java without PMD) → read those scope files once against the checklist in [Rules](references/rules.md); record each hit with file, line and rule, marked "found by reading".
+  - `error=` → that tool's files were not analyzed: never report them as clean; say so, and offer the checklist or a retry.
 
-If detection fails, prompts are unavailable, or the metadata is unusual, consult [references/language-detection.md](references/language-detection.md).
+Each finding has an `action`: `fix`, `check-api` (see Core Rules), `ask` (any rule with a security impact, including former hotspots such as S1313: a decision), `report` (TODO/FIXME: list only).
 
-Version matters because rule applicability changes per version (e.g. Java 17 sealed classes, Python 3.10 `match`, TS `strict` mode). When unknown, assume the latest stable version's ruleset.
+### Step 3: Baseline
 
----
+Before editing, run the `build`, `test` and (when printed) `typecheck` commands of every module that holds scope files. Failures are pre-existing: record them; a fix must not add one. A command ending in `(missing: <tool>)` cannot run: do not run it, treat it like `none`, and name the missing tool in the report (ask before installing it). A module with `test=none (...)` or a missing test tool has no safety net: put non-trivial restructurings (S3776, S107) on the decisions list instead of doing them.
 
-## Step 2 — List Scannable Source Files
+### Step 4: Fix
 
-Run:
+Order: bugs, then `fix` code smells, then `check-api` items that pass the Core Rules test. A fix that cannot be done without changing behaviour (for example S3776 that stays above 15) is edited back and becomes a decision. `SYNTAX` findings: fix only when the module's own build also fails on that file (build `none` → parse the file with the interpreter the module's `test` command uses, for example `uv run --frozen python -c "import ast,sys; ast.parse(open(sys.argv[1]).read())" <file>` or `.venv/bin/python -c …`, or `node --check <file>`); otherwise report it without editing: either the analyzer is older than the syntax, or the file uses syntax newer than the project's declared minimum version (for example `match` with `requires-python >= 3.9`). Follow [Fix Recipes](references/fix-recipes.md). After removing code, remove what only it used.
 
-```bash
-bash scripts/scan-sources.sh
-```
+### Step 5: Verify
 
-The script returns only first-party source files with relevant extensions, with all of the following excluded: build output, IDE state, virtual envs, `node_modules/`, `vendor/`, generated code, and any non-logic file (XML, YAML, JSON, Markdown, lockfiles, shell scripts, binary assets).
+1. Run `analyze` again on the same scope list: each fixed finding is gone and the touched files have no new one (the BROAD-EXCEPT that an S5754 fix creates is expected: it goes to the decisions list). A report finding no local tool covers: re-read the code; the server's next analysis confirms it.
+2. Run the Step 3 commands again: no new failure.
+3. A new failure → undo this round's fixes one at a time, newest first, by editing them back (never `git checkout`: it also drops other edits), re-running the failing test after each. Re-apply the innocent ones and run the full test command again; record the culprit as skipped with the failing test as the reason.
 
-For the full include/exclude contract — and for adapting to non-standard layouts — see [references/scan-paths.md](references/scan-paths.md).
+### Step 6: Loop until clean
 
-**Never** modify files that the scanner excludes. Dependency directories may be **read** (Step 4, Exception Narrowing) but never written to.
+Repeat Steps 4–5 until `analyze` shows no `fix` finding you still intend to fix, at most 5 rounds. False positives, user-declined findings and fixes that would change behaviour are out of the loop. Do not stop to ask whether to continue. Findings that would need a behaviour change are decisions; other `fix` findings still open after round 5 go to the report as left at the round limit.
 
----
+### Step 7: Report
 
-## Step 3 — Scan for Violations
-
-Inspect each file for the five SonarQube categories. For the full rule catalog with rule IDs per language, see [references/rules-reference.md](references/rules-reference.md).
-
-### 3.1 Bugs (Reliability)
-
-Code that is demonstrably wrong or will misbehave:
-
-- Null / None / nil dereferences
-- Wrong equality (`==` vs `.equals()` in Java; `is` vs `==` in Python)
-- Unclosed resources (streams, connections, files)
-- Off-by-one errors
-- Dead code after `return` / `break` / `throw`
-- Conditions always true or always false
-- Identical expressions on both sides of an operator
-
-### 3.2 Vulnerabilities (Security)
-
-- Hardcoded credentials or secrets
-- SQL injection via string concatenation
-- Unvalidated user input in dangerous operations
-- Weak crypto (MD5 / SHA1 for security; DES; ECB)
-- Disabled certificate validation
-- Path traversal, SSRF, XSS, command injection
-
-### 3.3 Code Smells (Maintainability)
-
-- Cyclomatic complexity > 15
-- Cognitive complexity > 15
-- Too many parameters (> 7)
-- Nesting depth > 3
-- Duplicated string literals (≥ 3 occurrences)
-- Unused imports / variables / parameters
-- Empty `catch` / `except` blocks that swallow errors
-- Over-broad catches (`catch (Exception)`, `except Exception`) — see **Exception Narrowing** below
-- Methods longer than ~80 logical lines
-- Boolean parameters that indicate the method should be split
-- Mutable global / class-level state without synchronization
-
-### 3.4 Security Hotspots
-
-Flag for manual review (do not silently "fix"):
-
-- Regex patterns (ReDoS risk)
-- Cookie flags (`Secure`, `HttpOnly`, `SameSite`)
-- CORS configuration
-- Logging of sensitive data
-- Pseudorandom number generators used for security
-
-### 3.5 Complexity
-
-- **Cyclomatic:** count `if`, `for`, `while`, `case`, `catch`, `&&`, `||`, ternary. Fix when > 15.
-- **Cognitive:** penalise nesting and breaks in linear flow. Fix when > 15.
-- **Reduce by:** extracting methods, early returns / guard clauses, dispatch maps, polymorphism, intermediate named booleans.
-
----
-
-## Step 4 — Fix Detected Issues
-
-### Naming
-
-- **Never** start a new identifier (function, variable, class, method, constant) with `_`.
-- Use the language's idiomatic convention: `camelCase` (Java / Kotlin / C# / TS), `snake_case` (Python), exported `PascalCase` / unexported `camelCase` (Go).
-
-### Fix Strategies
-
-**Bugs** — add null / Optional handling; use `.equals()` or identity checks correctly; try-with-resources / context managers; remove dead code.
-
-**Vulnerabilities** — replace hardcoded secrets with env / secret store lookups; parameterized queries; input validation; upgrade weak algorithms (→ SHA-256+, bcrypt / argon2 for passwords).
-
-**Code Smells** — extract long methods; remove unused imports and variables; handle or rethrow in empty catches; replace magic literals with named constants; parameter objects for wide signatures; flatten nesting with guard clauses; narrow over-broad catches.
-
-**Complexity** — early returns; extract predicates into well-named booleans; table-driven dispatch; split large `switch` / `match` via strategy or lookup map.
-
-### Exception Narrowing
-
-When a `catch (Exception)` / `except Exception` is encountered, **do not keep it as is**:
-
-1. Identify external libraries called inside the `try` block.
-2. Inspect the library's exception hierarchy — read-only — in the appropriate location:
-   - Python: `.venv/lib/*/site-packages/<lib>/exceptions.py` (or `errors.py`, `_exceptions.py`)
-   - Java: sources in the installed JAR or IDE-provided source
-   - TS / JS: custom error classes under `node_modules/<lib>/`
-   - Go: `errors.go` or sentinel errors under `vendor/` or the module cache
-3. Find the library's base exception class (well-designed libraries define one).
-4. Add the standard language exceptions that the `try` body's operations could actually raise (dict / list access → `KeyError` / `IndexError`; IO → `IOError`; conversions → `ValueError` / `TypeError`; etc.).
-5. Replace the broad catch with `(LibraryBaseException, StandardException1, StandardException2)`.
-6. Never catch unrecoverable errors — let them propagate.
-
-Reading dependency directories for this purpose is explicitly allowed; modifying them is not.
-
-### Fix Principles
-
-1. Preserve observable behaviour.
-2. Minimal change — only what resolves the issue.
-3. One issue per focused edit.
-4. Match surrounding style (indentation, quotes, braces).
-5. A fix must not introduce a new SonarQube issue.
-
----
-
-## Step 5 — Validate and Report
-
-### 5.1 Compile / Lint
-
-```bash
-bash scripts/lint.sh
-```
-
-Dispatches to the project's build system (Maven, Gradle, tsc, py_compile, go vet, dotnet build, cargo check, …). If the script cannot find a build system, see [references/validation-commands.md](references/validation-commands.md) for manual commands.
-
-### 5.2 Run Tests
-
-```bash
-bash scripts/run-tests.sh
-```
-
-Same dispatch logic for test runners (mvn test, gradle test, pytest, jest, go test, dotnet test, cargo test, …).
-
-### 5.3 Re-inspect Modified Files
-
-For each changed file verify:
-
-- The original issue is gone.
-- No new SonarQube-detectable issue has been introduced.
-- The file still compiles and passes linting.
-- **Cascade unused check:** when a variable, import, or assignment is removed, re-check the scope — any variable whose only reader was the deleted code is now unused and must be removed in the same pass. Repeat until stable.
-
-### 5.4 Summary Report
-
-Produce a final report:
-
-```
-## SonarQube Fix Report
-
-Project: <name>
-Language: <language> <version>
-Files Scanned: <n>
-Issues Found: <n>
-Issues Fixed: <n>
-Issues Skipped (manual review): <n>
-
-### Fixed
-| # | File | Rule | Severity | Description |
-|---|------|------|----------|-------------|
-| 1 | src/Service.java | S1854 | Major | Removed unused variable `temp` |
-
-### Skipped (require manual review)
-| # | File | Rule | Reason |
-|---|------|------|--------|
-| 1 | … | … | Behavioural change risk too high |
-```
-
----
+In the user's language:
+1. Scope (`scope_from`, file count, tests included), source of findings (Sonar report, or local analyzers with versions), languages analyzed only partly or not at all.
+2. Fixed findings: file, rule, what changed; one concrete before/after example. `[not in Sonar way]` items listed apart.
+3. Not fixed: false positives with the reason, skipped fixes, findings left at the round limit, user-declined findings, `report` items (TODO/FIXME).
+4. Decisions needed: every `ask`, open `check-api` and behaviour-changing item, each with the risk and the proposed change.
+5. Build and test results against the baseline; pre-existing failures.
+6. Local analyzers approximate SonarQube; the server's next analysis is the final word. Nothing committed.
 
 ## Additional Resources
 
-- Language & version detection table: [references/language-detection.md](references/language-detection.md)
-- Scan include / exclude contract: [references/scan-paths.md](references/scan-paths.md)
-- Full per-language rule catalog: [references/rules-reference.md](references/rules-reference.md)
-- Manual lint / test commands per language: [references/validation-commands.md](references/validation-commands.md)
+- [Rules](references/rules.md): coverage per language, thresholds, rule scopes, manual checklist
+- [Fix Recipes](references/fix-recipes.md): how to fix each rule family without changing behaviour
+- [Tools](references/tools.md): analyzer versions, cache, PMD, Sonar Web API, troubleshooting

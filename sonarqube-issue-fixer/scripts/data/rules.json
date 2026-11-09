@@ -1,0 +1,2404 @@
+{
+ "source": "Generated 2026-11-09 from SonarSource analyzer jars on Maven Central: sonar-python-plugin 5.32.0.37250, sonar-java-plugin 8.46.0.59609, sonar-javascript-plugin 14.4.0.46458; JS rule list = eslint-plugin-sonarjs 4.2.2 recommended (Sonar way).",
+ "ruff": {
+  "F841": "S1481",
+  "F401": "S1128",
+  "ERA001": "S125",
+  "SIM102": "S1066",
+  "F403": "S2208",
+  "A001": "S5806",
+  "N802": "S1542",
+  "N801": "S101",
+  "N803": "S117",
+  "N806": "S117",
+  "PLR0913": "S107",
+  "B018": "S905",
+  "PLW0127": "S1656",
+  "F632": "S5795",
+  "PLE0101": "S2734",
+  "F821": "S3827",
+  "PLW0120": "S2836",
+  "S501": "S4830",
+  "S311": "S2245",
+  "S105": "S2068",
+  "S106": "S2068",
+  "S107": "S2068",
+  "S608": "S2077",
+  "S324": "S4790",
+  "S306": "S5445",
+  "S103": "S2612",
+  "S502": "S4423",
+  "S503": "S4423",
+  "S504": "S4423",
+  "S701": "S5247",
+  "S201": "S4507",
+  "PIE790": "S2772",
+  "TRY203": "S2737",
+  "ARG001": "S1172",
+  "ARG002": "S1172",
+  "B012": "S1143",
+  "PLR0124": "S1764",
+  "SIM114": "S1871",
+  "FIX001": "S1134",
+  "FIX002": "S1135",
+  "BLE001": "BROAD-EXCEPT"
+ },
+ "pmd": {
+  "AvoidDuplicateLiterals": [
+   "S1192",
+   "category/java/errorprone.xml"
+  ],
+  "UnusedLocalVariable": [
+   "S1481",
+   "category/java/bestpractices.xml"
+  ],
+  "UnusedPrivateMethod": [
+   "S1144",
+   "category/java/bestpractices.xml"
+  ],
+  "UnusedPrivateField": [
+   "S1068",
+   "category/java/bestpractices.xml"
+  ],
+  "UnusedFormalParameter": [
+   "S1172",
+   "category/java/bestpractices.xml"
+  ],
+  "CollapsibleIfStatements": [
+   "S1066",
+   "category/java/design.xml"
+  ],
+  "EmptyCatchBlock": [
+   "S108",
+   "category/java/errorprone.xml"
+  ],
+  "EmptyControlStatement": [
+   "S108",
+   "category/java/codestyle.xml"
+  ],
+  "UnnecessaryImport": [
+   "S1128",
+   "category/java/codestyle.xml"
+  ],
+  "SimplifyBooleanReturns": [
+   "S1126",
+   "category/java/design.xml"
+  ],
+  "UseCollectionIsEmpty": [
+   "S1155",
+   "category/java/bestpractices.xml"
+  ],
+  "AvoidThrowingRawExceptionTypes": [
+   "S112",
+   "category/java/design.xml"
+  ],
+  "CloseResource": [
+   "S2095",
+   "category/java/errorprone.xml"
+  ],
+  "UseTryWithResources": [
+   "S2093",
+   "category/java/bestpractices.xml"
+  ],
+  "UnusedAssignment": [
+   "S1854",
+   "category/java/bestpractices.xml"
+  ],
+  "AvoidUsingHardCodedIP": [
+   "S1313",
+   "category/java/bestpractices.xml"
+  ],
+  "UncommentedEmptyMethodBody": [
+   "S1186",
+   "category/java/documentation.xml"
+  ],
+  "AvoidCatchingGenericException": [
+   "S2221",
+   "category/java/errorprone.xml"
+  ],
+  "InstantiableUtilityClass": [
+   "S1118",
+   "category/java/design.xml"
+  ]
+ },
+ "sonarjs": {
+  "anchor-precedence": "S5850",
+  "argument-type": "S3782",
+  "arguments-order": "S2234",
+  "array-callback-without-return": "S3796",
+  "assertions-in-test-cases": "S8784",
+  "assertions-in-tests": "S2699",
+  "async-test-assertions": "S8780",
+  "avoid-mutating-nested-properties-of-shallow-clones": "S9135",
+  "aws-apigateway-public-api": "S6333",
+  "aws-ec2-rds-dms-public": "S6329",
+  "aws-ec2-unencrypted-ebs-volume": "S6275",
+  "aws-efs-unencrypted": "S6332",
+  "aws-iam-all-privileges": "S6302",
+  "aws-iam-privilege-escalation": "S6317",
+  "aws-iam-public-access": "S6270",
+  "aws-opensearchservice-domain": "S6308",
+  "aws-rds-unencrypted-databases": "S6303",
+  "aws-restricted-ip-admin-access": "S6321",
+  "aws-s3-bucket-granted-access": "S6265",
+  "aws-s3-bucket-insecure-http": "S6249",
+  "aws-s3-bucket-public-access": "S6281",
+  "aws-s3-bucket-versioning": "S6252",
+  "aws-sagemaker-unencrypted-notebook": "S6319",
+  "aws-sns-unencrypted-topics": "S6327",
+  "aws-sqs-unencrypted-queue": "S6330",
+  "bitwise-operators": "S1529",
+  "block-scoped-var": "S2392",
+  "call-argument-line": "S1472",
+  "chai-determinate-assertion": "S6092",
+  "class-name": "S101",
+  "code-eval": "S1523",
+  "cognitive-complexity": "S3776",
+  "comma-or-logical-or-case": "S3616",
+  "concise-regex": "S6353",
+  "constructor-for-side-effects": "S1848",
+  "content-length": "S5693",
+  "content-security-policy": "S5728",
+  "cookie-no-httponly": "S3330",
+  "cors": "S5122",
+  "csrf": "S4502",
+  "deprecation": "S1874",
+  "different-types-comparison": "S3403",
+  "disabled-auto-escaping": "S5247",
+  "disabled-resource-integrity": "S5725",
+  "disabled-timeout": "S6080",
+  "dompurify-unsafe-config": "S8479",
+  "duplicates-in-character-class": "S5869",
+  "dynamically-constructed-templates": "S7790",
+  "empty-string-repetition": "S5842",
+  "encryption-secure-mode": "S5542",
+  "existing-groups": "S6328",
+  "explicit-test-skip": "S8968",
+  "file-permissions": "S2612",
+  "file-uploads": "S2598",
+  "fixme-tag": "S1134",
+  "for-loop-increment-sign": "S2251",
+  "function-inside-loop": "S1515",
+  "function-return-type": "S3800",
+  "future-reserved-words": "S1527",
+  "generator-without-yield": "S3531",
+  "hardcoded-secret-signatures": "S6437",
+  "hashing": "S4790",
+  "hooks-before-test-cases": "S8782",
+  "in-operator-type-error": "S3785",
+  "inconsistent-function-call": "S3686",
+  "index-of-compare-to-positive-number": "S2692",
+  "insecure-cookie": "S2092",
+  "insecure-jwt-token": "S5659",
+  "inverted-assertion-arguments": "S3415",
+  "jsx-no-leaked-render": "S6439",
+  "label-position": "S1439",
+  "link-with-target-blank": "S5148",
+  "max-switch-cases": "S1479",
+  "memoize-cache-key": "S8932",
+  "misplaced-loop-counter": "S1994",
+  "new-operator-misuse": "S2999",
+  "no-all-duplicated-branches": "S3923",
+  "no-alphabetical-sort": "S2871",
+  "no-angular-bypass-sanitization": "S6268",
+  "no-array-delete": "S2870",
+  "no-associative-arrays": "S3579",
+  "no-async-constructor": "S7059",
+  "no-case-label-in-switch": "S1219",
+  "no-clear-text-protocols": "S5332",
+  "no-code-after-done": "S6079",
+  "no-collection-size-mischeck": "S3981",
+  "no-control-regex": "S6324",
+  "no-dead-store": "S1854",
+  "no-debounce-throttle-in-render": "S9114",
+  "no-debug-commands-in-ui-tests": "S8959",
+  "no-default-utility-imports": "S8927",
+  "no-delete-var": "S3001",
+  "no-duplicate-in-composite": "S4621",
+  "no-duplicate-parameterized-test-case": "S9078",
+  "no-duplicate-test-title": "S8754",
+  "no-duplicated-branches": "S1871",
+  "no-element-overwrite": "S4143",
+  "no-empty-after-reluctant": "S6019",
+  "no-empty-alternatives": "S6323",
+  "no-empty-character-class": "S2639",
+  "no-empty-collection": "S4158",
+  "no-empty-group": "S6331",
+  "no-empty-parameterized-test-dataset": "S8998",
+  "no-empty-test-file": "S2187",
+  "no-empty-test-title": "S8781",
+  "no-equals-in-for-termination": "S888",
+  "no-exclusive-tests": "S6426",
+  "no-extra-arguments": "S930",
+  "no-fallthrough": "S128",
+  "no-fixed-wait-in-tests": "S2925",
+  "no-floating-point-equality": "S1244",
+  "no-forced-browser-interaction": "S8783",
+  "no-global-this": "S2990",
+  "no-globals-shadowing": "S2137",
+  "no-gratuitous-expressions": "S2589",
+  "no-hardcoded-ip": "S1313",
+  "no-hardcoded-passwords": "S2068",
+  "no-hardcoded-secrets": "S6418",
+  "no-hook-setter-in-body": "S6442",
+  "no-identical-conditions": "S1862",
+  "no-identical-expressions": "S1764",
+  "no-identical-functions": "S4144",
+  "no-ignored-exceptions": "S2486",
+  "no-ignored-return": "S2201",
+  "no-implicit-global": "S2703",
+  "no-in-misuse": "S4619",
+  "no-incompatible-assertion-types": "S5845",
+  "no-incomplete-assertions": "S2970",
+  "no-internal-api-use": "S6627",
+  "no-interpolation-in-inline-snapshots": "S8967",
+  "no-invalid-regexp": "S5856",
+  "no-invariant-returns": "S3516",
+  "no-inverted-boolean-check": "S1940",
+  "no-labels": "S1119",
+  "no-literal-call": "S6958",
+  "no-mime-sniff": "S5734",
+  "no-misleading-array-reverse": "S4043",
+  "no-misleading-character-class": "S5868",
+  "no-mutate-reactive-state-in-updated-hook": "S9163",
+  "no-nested-assignment": "S1121",
+  "no-nested-conditional": "S3358",
+  "no-nested-functions": "S2004",
+  "no-nested-template-literals": "S4624",
+  "no-os-command-from-path": "S4036",
+  "no-parameter-reassignment": "S1226",
+  "no-primitive-wrappers": "S1533",
+  "no-redundant-assignments": "S4165",
+  "no-redundant-boolean": "S1125",
+  "no-redundant-jump": "S3626",
+  "no-redundant-optional": "S4782",
+  "no-referrer-policy": "S5736",
+  "no-regex-spaces": "S6326",
+  "no-same-argument-assert": "S5863",
+  "no-same-line-conditional": "S3972",
+  "no-selector-parameter": "S2301",
+  "no-session-cookies-on-static-assets": "S8441",
+  "no-skipped-tests": "S1607",
+  "no-small-switch": "S1301",
+  "no-table-as-layout": "S5257",
+  "no-trivial-assertions": "S5914",
+  "no-try-promise": "S4822",
+  "no-undefined-argument": "S4623",
+  "no-unenclosed-multiline-block": "S2681",
+  "no-uniq-key": "S6486",
+  "no-unthrown-error": "S3984",
+  "no-unused-collection": "S4030",
+  "no-unused-vars": "S1481",
+  "no-use-of-empty-return-value": "S3699",
+  "no-useless-catch": "S2737",
+  "no-useless-increment": "S2123",
+  "no-useless-intersection": "S4335",
+  "no-useless-react-setstate": "S6443",
+  "no-vue-class-component": "S9145",
+  "no-vue-mixins": "S9150",
+  "no-weak-cipher": "S5547",
+  "no-weak-keys": "S4426",
+  "non-existent-operator": "S2757",
+  "null-dereference": "S2259",
+  "object-alt-content": "S5264",
+  "parameterized-tests": "S5976",
+  "post-message": "S2819",
+  "prefer-cypress-should": "S9162",
+  "prefer-default-last": "S4524",
+  "prefer-native-axios-alternative": "S9339",
+  "prefer-native-jquery-alternative": "S9144",
+  "prefer-native-lodash-alternative": "S8907",
+  "prefer-promise-shorthand": "S4634",
+  "prefer-read-only-props": "S6759",
+  "prefer-regexp-exec": "S6594",
+  "prefer-single-boolean-return": "S1126",
+  "prefer-specific-assertions": "S5906",
+  "prefer-type-guard": "S4322",
+  "prefer-while": "S1264",
+  "production-debug": "S4507",
+  "pseudo-random": "S2245",
+  "public-static-readonly": "S1444",
+  "publicly-writable-directories": "S5443",
+  "reduce-initial-value": "S6959",
+  "redundant-type-aliases": "S6564",
+  "regex-complexity": "S5843",
+  "review-blockchain-mnemonic": "S7639",
+  "session-regeneration": "S5876",
+  "single-char-in-character-classes": "S6397",
+  "single-character-alternation": "S6035",
+  "slow-regex": "S5852",
+  "sql-queries": "S2077",
+  "stable-tests": "S5973",
+  "stateful-regex": "S6351",
+  "strict-transport-security": "S5739",
+  "super-linear-regex": "S8786",
+  "synchronous-exception-assertions": "S9072",
+  "synchronous-suite-callback": "S8785",
+  "table-header": "S5256",
+  "table-header-reference": "S5260",
+  "test-check-exception": "S5958",
+  "testing-library-prefer-query-by-disappearance": "S9153",
+  "testing-library-query-assertion": "S9027",
+  "todo-tag": "S1135",
+  "unused-import": "S1128",
+  "unused-named-groups": "S5860",
+  "unverified-certificate": "S4830",
+  "unverified-hostname": "S5527",
+  "updated-const-var": "S3500",
+  "updated-loop-counter": "S2310",
+  "use-type-alias": "S4323",
+  "vitest-mock-at-module-scope": "S9169",
+  "void-use": "S3735",
+  "weak-ssl": "S4423",
+  "x-powered-by": "S5689",
+  "xml-parser-xxe": "S2755",
+  "max-params": "S107"
+ },
+ "rules": {
+  "python": {
+   "S101": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Class names should comply with a naming convention",
+    "security": false
+   },
+   "S1066": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Mergeable \"if\" statements should be combined",
+    "security": false
+   },
+   "S107": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Functions, methods and lambdas should not have too many parameters",
+    "security": false
+   },
+   "S1128": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": false,
+    "title": "Unnecessary imports should be removed",
+    "security": false
+   },
+   "S1134": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Track uses of \"FIXME\" tags",
+    "security": false
+   },
+   "S1135": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Track uses of \"TODO\" tags",
+    "security": false
+   },
+   "S1143": {
+    "type": "BUG",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Break, continue and return statements should not occur in \"finally\" blocks",
+    "security": false
+   },
+   "S117": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Local variable and function parameter names should comply with a naming convention",
+    "security": false
+   },
+   "S1172": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Unused function parameters should be removed",
+    "security": false
+   },
+   "S1192": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "String literals should not be duplicated",
+    "security": false
+   },
+   "S125": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Sections of code should not be commented out",
+    "security": false
+   },
+   "S1481": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Unused local variables should be removed",
+    "security": false
+   },
+   "S1542": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Function names should comply with a naming convention",
+    "security": false
+   },
+   "S1656": {
+    "type": "BUG",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Variables should not be self-assigned",
+    "security": false
+   },
+   "S1764": {
+    "type": "BUG",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Identical expressions should not be used on both sides of a binary operator",
+    "security": false
+   },
+   "S1871": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Two branches in a conditional structure should not have exactly the same implementation",
+    "security": false
+   },
+   "S2068": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Credentials should not be hard-coded",
+    "security": true
+   },
+   "S2077": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "SQL queries should not be dynamically formatted",
+    "security": true
+   },
+   "S2208": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Wildcard imports should not be used",
+    "security": false
+   },
+   "S2245": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Pseudorandom number generators (PRNGs) should not be used in security contexts",
+    "security": true
+   },
+   "S2612": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "File permissions should not be set to world-accessible values",
+    "security": true
+   },
+   "S2734": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"__init__\" should not return a value",
+    "security": false
+   },
+   "S2737": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"except\" clauses should do more than raise the same issue",
+    "security": false
+   },
+   "S2772": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"pass\" should not be used needlessly",
+    "security": false
+   },
+   "S2836": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Loops without \"break\" should not have \"else\" clauses",
+    "security": false
+   },
+   "S3776": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Cognitive Complexity of functions should not be too high",
+    "security": false
+   },
+   "S3827": {
+    "type": "BUG",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Variables, classes and functions should be defined before being used",
+    "security": false
+   },
+   "S4423": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Weak SSL/TLS protocols should not be used",
+    "security": true
+   },
+   "S4507": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Debugging features should not be enabled in production",
+    "security": true
+   },
+   "S4790": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Weak hashing algorithms should not be used",
+    "security": true
+   },
+   "S4830": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Server certificates should be verified during SSL/TLS connections",
+    "security": true
+   },
+   "S5247": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Auto-escaping in HTML template engines should not be disabled",
+    "security": true
+   },
+   "S5445": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Insecure temporary file creation methods should not be used",
+    "security": true
+   },
+   "S5754": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"SystemExit\" should be re-raised",
+    "security": false
+   },
+   "S5795": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Identity comparisons should not be used with cached types",
+    "security": false
+   },
+   "S5806": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Builtins should not be shadowed by local variables",
+    "security": false
+   },
+   "S905": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Non-empty statements should change control flow or have at least one side-effect",
+    "security": false
+   },
+   "BROAD-EXCEPT": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": false,
+    "title": "Broad \"except\" clauses should name the exceptions they handle (this skill's own check, not a Sonar rule)",
+    "security": false
+   }
+  },
+  "java": {
+   "S1066": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Mergeable \"if\" statements should be combined",
+    "security": false
+   },
+   "S1068": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Unused \"private\" fields should be removed",
+    "security": false
+   },
+   "S107": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Methods should not have too many parameters",
+    "security": false
+   },
+   "S108": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Nested blocks of code should not be left empty",
+    "security": false
+   },
+   "S1118": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Utility classes should not have public constructors",
+    "security": false
+   },
+   "S112": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Generic exceptions should never be thrown",
+    "security": false
+   },
+   "S1126": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Return of boolean expressions should not be wrapped into an \"if-then-else\" statement",
+    "security": false
+   },
+   "S1128": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Unnecessary imports should be removed",
+    "security": false
+   },
+   "S1144": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Unused \"private\" methods should be removed",
+    "security": false
+   },
+   "S1155": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"Collection.isEmpty()\" should be used to test for emptiness",
+    "security": false
+   },
+   "S1172": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Unused method parameters should be removed",
+    "security": false
+   },
+   "S1186": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Methods should not be empty",
+    "security": false
+   },
+   "S1192": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "String literals should not be duplicated",
+    "security": false
+   },
+   "S1313": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "IP addresses should not be hardcoded",
+    "security": true
+   },
+   "S1481": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Unused local variables should be removed",
+    "security": false
+   },
+   "S1854": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Unused assignments should be removed",
+    "security": false
+   },
+   "S2093": {
+    "type": "CODE_SMELL",
+    "scope": "All",
+    "sonar_way": true,
+    "title": "Try-with-resources should be used",
+    "security": false
+   },
+   "S2221": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": false,
+    "title": "\"Exception\" should not be caught when not required by called methods",
+    "security": false
+   },
+   "S3776": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Cognitive Complexity of methods should not be too high",
+    "security": false
+   },
+   "S2095": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Resources should be closed (symbolic-execution analyzer; metadata not in sonar-java-plugin)",
+    "security": false
+   }
+  },
+  "javascript": {
+   "S5850": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Alternatives in regular expressions should be grouped when used with anchors",
+    "security": false
+   },
+   "S3782": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Arguments to built-in functions should match documented types",
+    "security": false
+   },
+   "S2234": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Parameters should be passed in the correct order",
+    "security": false
+   },
+   "S3796": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Callbacks of array methods should have return statements",
+    "security": false
+   },
+   "S8784": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Assertions should be placed inside test cases or hooks",
+    "security": false
+   },
+   "S2699": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Tests should include assertions",
+    "security": false
+   },
+   "S8780": {
+    "type": "BUG",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Async test assertions should be awaited or returned",
+    "security": false
+   },
+   "S9135": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Nested properties of Lodash and Underscore.js clone results should not be mutated",
+    "security": false
+   },
+   "S6333": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "AWS API Gateway should require authentication",
+    "security": true
+   },
+   "S6329": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Public network access to cloud resources should be disabled",
+    "security": true
+   },
+   "S6275": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "EBS volumes should be encrypted",
+    "security": true
+   },
+   "S6332": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Amazon EFS file systems should be encrypted",
+    "security": true
+   },
+   "S6302": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Policies should not grant all privileges",
+    "security": true
+   },
+   "S6317": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "AWS IAM policies should limit the scope of permissions given",
+    "security": true
+   },
+   "S6270": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "AWS resource-based policies should not grant public access",
+    "security": true
+   },
+   "S6308": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "OpenSearch domains should have encryption at rest enabled",
+    "security": true
+   },
+   "S6303": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Amazon RDS resources should be encrypted at rest",
+    "security": true
+   },
+   "S6321": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Administration services access should be restricted to specific IP addresses",
+    "security": true
+   },
+   "S6265": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "S3 buckets should not grant access to all users or authenticated users",
+    "security": true
+   },
+   "S6249": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "S3 buckets should enforce HTTPS-only access",
+    "security": true
+   },
+   "S6281": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Amazon S3 bucket public access should be fully blocked",
+    "security": true
+   },
+   "S6252": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Amazon S3 buckets should have versioning enabled",
+    "security": true
+   },
+   "S6319": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "SageMaker notebook instances should be encrypted at rest",
+    "security": true
+   },
+   "S6327": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Amazon SNS topics should be encrypted at rest",
+    "security": true
+   },
+   "S6330": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "SQS queues should be encrypted",
+    "security": true
+   },
+   "S1529": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Bitwise operators should not be used in boolean contexts",
+    "security": false
+   },
+   "S2392": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Variables should be used in the blocks where they are declared",
+    "security": false
+   },
+   "S1472": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Function call arguments should not start on new lines",
+    "security": false
+   },
+   "S6092": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Chai assertions should have only one reason to succeed",
+    "security": false
+   },
+   "S101": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Class names should comply with a naming convention",
+    "security": false
+   },
+   "S1523": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Dynamic code execution should not use user-controlled data",
+    "security": true
+   },
+   "S3776": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Cognitive Complexity of functions should not be too high",
+    "security": false
+   },
+   "S3616": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Comma and logical OR operators should not be used in switch cases",
+    "security": false
+   },
+   "S6353": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Regular expression quantifiers and character classes should be used concisely",
+    "security": false
+   },
+   "S1848": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Objects should not be created to be dropped immediately without being used",
+    "security": false
+   },
+   "S5693": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "HTTP request content length should be limited",
+    "security": true
+   },
+   "S5728": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Content security policy fetch directives should not be disabled",
+    "security": true
+   },
+   "S3330": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Cookies should have the \"HttpOnly\" flag",
+    "security": true
+   },
+   "S5122": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Cross-Origin Resource Sharing (CORS) policy should be restricted to trusted origins",
+    "security": true
+   },
+   "S4502": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "CSRF protections should not be disabled",
+    "security": true
+   },
+   "S1874": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Deprecated APIs should not be used",
+    "security": false
+   },
+   "S3403": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Strict equality operators should not be used with dissimilar types",
+    "security": false
+   },
+   "S5247": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Auto-escaping in HTML template engines should not be disabled",
+    "security": true
+   },
+   "S5725": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Remote artifacts should not be used without integrity checks",
+    "security": true
+   },
+   "S6080": {
+    "type": "BUG",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Disabling Mocha timeouts should be explicit",
+    "security": false
+   },
+   "S8479": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "DOMPurify configuration should not be bypassable",
+    "security": true
+   },
+   "S5869": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Character classes in regular expressions should not contain the same character twice",
+    "security": false
+   },
+   "S7790": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Templates should not be constructed dynamically",
+    "security": true
+   },
+   "S5842": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Repeated patterns in regular expressions should not match the empty string",
+    "security": false
+   },
+   "S5542": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Encryption algorithms should be used with secure mode and padding scheme",
+    "security": true
+   },
+   "S6328": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Replacement strings should reference existing regular expression groups",
+    "security": false
+   },
+   "S8968": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Tests should be skipped explicitly",
+    "security": false
+   },
+   "S2612": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "File permissions should not be set to world-accessible values",
+    "security": true
+   },
+   "S2598": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "File uploads should be restricted",
+    "security": true
+   },
+   "S1134": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Track uses of \"FIXME\" tags",
+    "security": false
+   },
+   "S2251": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "A \"for\" loop update clause should move the counter in the right direction",
+    "security": false
+   },
+   "S1515": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Functions should not be defined inside loops",
+    "security": false
+   },
+   "S3800": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Functions should always return the same type",
+    "security": false
+   },
+   "S1527": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Future reserved words should not be used as identifiers",
+    "security": false
+   },
+   "S3531": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Generators should explicitly \"yield\" a value",
+    "security": false
+   },
+   "S6437": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Credentials should not be hard-coded",
+    "security": true
+   },
+   "S4790": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Weak hashing algorithms should not be used",
+    "security": true
+   },
+   "S8782": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Lifecycle hooks should not be interleaved with test cases or nested suites",
+    "security": false
+   },
+   "S3785": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"in\" should not be used with primitive types",
+    "security": false
+   },
+   "S3686": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Functions should be called consistently with or without \"new\"",
+    "security": false
+   },
+   "S2692": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"indexOf\" checks should not be for positive numbers",
+    "security": false
+   },
+   "S2092": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Cookies should have the \"secure\" flag",
+    "security": true
+   },
+   "S5659": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "JWT should be signed and verified with strong cipher algorithms",
+    "security": true
+   },
+   "S3415": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Assertion arguments should be passed in the correct order",
+    "security": false
+   },
+   "S6439": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "React components should not render non-boolean condition values",
+    "security": false
+   },
+   "S1439": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Only \"while\", \"do\", \"for\" and \"switch\" statements should be labelled",
+    "security": false
+   },
+   "S5148": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Opened windows should not have access to the originating page",
+    "security": true
+   },
+   "S1479": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"switch\" statements should not have too many \"case\" clauses",
+    "security": false
+   },
+   "S8932": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Lodash and Underscore.js `memoize` calls on functions with multiple parameters should use an explicit cache key function",
+    "security": false
+   },
+   "S1994": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"for\" loop increment clauses should modify the loops' counters",
+    "security": false
+   },
+   "S2999": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"new\" should only be used with functions and classes",
+    "security": false
+   },
+   "S3923": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "All branches in a conditional structure should not have exactly the same implementation",
+    "security": false
+   },
+   "S2871": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"Array.prototype.sort()\" and \"Array.prototype.toSorted()\" should use a compare function",
+    "security": false
+   },
+   "S6268": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Angular built-in sanitization should not be disabled",
+    "security": true
+   },
+   "S2870": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"delete\" should not be used on arrays",
+    "security": false
+   },
+   "S3579": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Array indexes should be numeric",
+    "security": false
+   },
+   "S7059": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Constructors should not contain asynchronous operations",
+    "security": false
+   },
+   "S1219": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"switch\" statements should not contain non-case labels",
+    "security": false
+   },
+   "S5332": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Clear-text protocols should not be used",
+    "security": true
+   },
+   "S6079": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Tests should not execute any code after \"done()\" is called",
+    "security": false
+   },
+   "S3981": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Collection size and array length comparisons should make sense",
+    "security": false
+   },
+   "S6324": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Regular expressions should not contain control characters",
+    "security": false
+   },
+   "S1854": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Unused assignments should be removed",
+    "security": false
+   },
+   "S9114": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Lodash and Underscore.js debounced or throttled functions should not be recreated on every React render",
+    "security": false
+   },
+   "S8959": {
+    "type": "BUG",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "UI test debug commands should not be committed to version control",
+    "security": false
+   },
+   "S8927": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Default imports from modular utility libraries should not be used",
+    "security": false
+   },
+   "S3001": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"delete\" should be used only with object properties",
+    "security": false
+   },
+   "S4621": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Union and intersection types should not include duplicated constituents",
+    "security": false
+   },
+   "S9078": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Parameterized tests should not contain duplicate test cases",
+    "security": false
+   },
+   "S8754": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Test titles should be unique within the same suite",
+    "security": false
+   },
+   "S1871": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Two branches in a conditional structure should not have exactly the same implementation",
+    "security": false
+   },
+   "S4143": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Collection elements should not be replaced unconditionally",
+    "security": false
+   },
+   "S6019": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Reluctant quantifiers in regular expressions should be followed by an expression that can't match the empty string",
+    "security": false
+   },
+   "S6323": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Alternation in regular expressions should not contain empty alternatives",
+    "security": false
+   },
+   "S2639": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Empty character classes should not be used",
+    "security": false
+   },
+   "S4158": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Empty collections should not be accessed or iterated",
+    "security": false
+   },
+   "S6331": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Regular expressions should not contain empty groups",
+    "security": false
+   },
+   "S8998": {
+    "type": "BUG",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Parameterized tests should not have empty datasets",
+    "security": false
+   },
+   "S2187": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Test files should contain at least one test case",
+    "security": false
+   },
+   "S8781": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Test and suite titles should not be empty or whitespace-only",
+    "security": false
+   },
+   "S888": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Equality operators should not be used in \"for\" loop termination conditions",
+    "security": false
+   },
+   "S6426": {
+    "type": "BUG",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Exclusive tests should not be committed to version control",
+    "security": false
+   },
+   "S930": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Function calls should not pass extra arguments",
+    "security": false
+   },
+   "S128": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Switch cases should end with an unconditional \"break\" statement",
+    "security": false
+   },
+   "S2925": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Fixed waits should not be used in tests",
+    "security": false
+   },
+   "S1244": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Floating point numbers should not be tested for equality",
+    "security": false
+   },
+   "S8783": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Forced browser interactions should not bypass actionability checks",
+    "security": false
+   },
+   "S2990": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "The global \"this\" object should not be used",
+    "security": false
+   },
+   "S2137": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Special identifiers should not be bound or assigned",
+    "security": false
+   },
+   "S2589": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Boolean expressions should not be gratuitous",
+    "security": false
+   },
+   "S1313": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "IP addresses should not be hardcoded",
+    "security": true
+   },
+   "S2068": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Credentials should not be hard-coded",
+    "security": true
+   },
+   "S6418": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Secrets should not be hard-coded",
+    "security": true
+   },
+   "S6442": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "React's useState hook should not be used directly in the render function or body of a component",
+    "security": false
+   },
+   "S1862": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"if/else if\" chains and \"switch\" cases should not have the same condition",
+    "security": false
+   },
+   "S1764": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Identical expressions should not be used on both sides of a binary operator",
+    "security": false
+   },
+   "S4144": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Functions should not have identical implementations",
+    "security": false
+   },
+   "S2486": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Exceptions should not be ignored",
+    "security": false
+   },
+   "S2201": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Return values from functions without side effects should not be ignored",
+    "security": false
+   },
+   "S2703": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Variables should be declared explicitly",
+    "security": false
+   },
+   "S4619": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"in\" should not be used on arrays",
+    "security": false
+   },
+   "S5845": {
+    "type": "BUG",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Assertions comparing incompatible types should not be made",
+    "security": false
+   },
+   "S2970": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Assertions should be complete",
+    "security": false
+   },
+   "S6627": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Users should not use internal APIs",
+    "security": false
+   },
+   "S8967": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Inline snapshots should not contain interpolations",
+    "security": false
+   },
+   "S5856": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Regular expressions should be syntactically valid",
+    "security": false
+   },
+   "S3516": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Function returns should not be invariant",
+    "security": false
+   },
+   "S1940": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Boolean checks should not be inverted",
+    "security": false
+   },
+   "S1119": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Labels should not be used",
+    "security": false
+   },
+   "S6958": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Literals should not be used as functions",
+    "security": false
+   },
+   "S5734": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Browsers should not be allowed to perform MIME type sniffing",
+    "security": true
+   },
+   "S4043": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Array-mutating methods should not be used misleadingly",
+    "security": false
+   },
+   "S5868": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Unicode Grapheme Clusters should be avoided inside regex character classes",
+    "security": false
+   },
+   "S9163": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Reactive state should not be unconditionally mutated inside Vue's \"updated\" lifecycle hook",
+    "security": false
+   },
+   "S1121": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Assignments should not be made from within sub-expressions",
+    "security": false
+   },
+   "S3358": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Ternary operators should not be nested",
+    "security": false
+   },
+   "S2004": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Functions should not be nested too deeply",
+    "security": false
+   },
+   "S4624": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Template literals should not be nested",
+    "security": false
+   },
+   "S4036": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "OS commands should not rely on PATH resolution",
+    "security": true
+   },
+   "S1226": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Initial values of parameters, caught exceptions, and loop variables should not be ignored",
+    "security": false
+   },
+   "S1533": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Wrapper objects should not be used for primitive types",
+    "security": false
+   },
+   "S4165": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Assignments should not be redundant",
+    "security": false
+   },
+   "S1125": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Boolean literals should not be used in comparisons",
+    "security": false
+   },
+   "S3626": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Jump statements should not be redundant",
+    "security": false
+   },
+   "S4782": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Optional property declarations should not use both '?' and 'undefined' syntax",
+    "security": false
+   },
+   "S5736": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "HTTP Referrer-Policy should not be set to an unsafe value",
+    "security": true
+   },
+   "S6326": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Regular expressions should not contain multiple spaces",
+    "security": false
+   },
+   "S5863": {
+    "type": "BUG",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Assertions should not be given twice the same argument",
+    "security": false
+   },
+   "S3972": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Conditionals should start on new lines",
+    "security": false
+   },
+   "S2301": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Methods should not contain selector parameters",
+    "security": false
+   },
+   "S8441": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Static Assets should not serve session cookies",
+    "security": true
+   },
+   "S1607": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Tests should not be skipped without providing a reason",
+    "security": false
+   },
+   "S1301": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"if\" statements should be preferred over \"switch\" when simpler",
+    "security": false
+   },
+   "S5257": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "HTML \"<table>\" should not be used for layout purposes",
+    "security": false
+   },
+   "S5914": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Assertions should not be trivially true",
+    "security": false
+   },
+   "S4822": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Promise rejections should not be caught by \"try\" blocks",
+    "security": false
+   },
+   "S4623": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"undefined\" should not be passed as the value of optional parameters",
+    "security": false
+   },
+   "S2681": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Multiline blocks should be enclosed in curly braces",
+    "security": false
+   },
+   "S6486": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "JSX list components keys should match up between renders",
+    "security": false
+   },
+   "S3984": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Errors should not be created without being thrown",
+    "security": false
+   },
+   "S4030": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Collection contents should be used",
+    "security": false
+   },
+   "S1481": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Unused local variables and functions should be removed",
+    "security": false
+   },
+   "S3699": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "The return value of void functions should not be used",
+    "security": false
+   },
+   "S2737": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"catch\" clauses should do more than rethrow",
+    "security": false
+   },
+   "S2123": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Values should not be uselessly incremented",
+    "security": false
+   },
+   "S4335": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Type intersections should use meaningful types",
+    "security": false
+   },
+   "S6443": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "React state setter function should not be called with its matching state variable",
+    "security": false
+   },
+   "S9145": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Vue components should not use the deprecated \"vue-class-component\" or \"vue-property-decorator\" libraries",
+    "security": false
+   },
+   "S9150": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Vue components should not use mixins",
+    "security": false
+   },
+   "S5547": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Cipher algorithms should be robust",
+    "security": true
+   },
+   "S4426": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Cryptographic keys should be robust",
+    "security": true
+   },
+   "S2757": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Non-existent operators '=+', '=-' and '=!' should not be used",
+    "security": false
+   },
+   "S2259": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Properties of variables with \"null\" or \"undefined\" values should not be accessed",
+    "security": false
+   },
+   "S5264": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"<object>\" tags should provide an alternative content",
+    "security": false
+   },
+   "S5976": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Similar tests should be grouped in a single Parameterized test",
+    "security": false
+   },
+   "S2819": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Origins should be verified during cross-origin communications",
+    "security": true
+   },
+   "S9162": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Cypress assertions should be retryable",
+    "security": false
+   },
+   "S4524": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"default\" clauses should be last",
+    "security": false
+   },
+   "S9339": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Native APIs should be preferred over Axios utility methods",
+    "security": false
+   },
+   "S9144": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Native APIs should be preferred over jQuery utility methods",
+    "security": false
+   },
+   "S8907": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Native APIs should be preferred over Lodash and Underscore.js methods",
+    "security": false
+   },
+   "S4634": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Shorthand promises should be used",
+    "security": false
+   },
+   "S6759": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "React props should be read-only",
+    "security": false
+   },
+   "S6594": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"RegExp.exec()\" should be preferred over \"String.match()\"",
+    "security": false
+   },
+   "S1126": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Return of boolean expressions should not be wrapped into an \"if-then-else\" statement",
+    "security": false
+   },
+   "S5906": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "The most specific assertion should be used",
+    "security": false
+   },
+   "S4322": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Type predicates should be used",
+    "security": false
+   },
+   "S1264": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "A \"while\" loop should be used instead of a \"for\" loop",
+    "security": false
+   },
+   "S4507": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Debugging features should not be enabled in production",
+    "security": true
+   },
+   "S2245": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Pseudorandom number generators (PRNGs) should not be used in security contexts",
+    "security": true
+   },
+   "S1444": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Public \"static\" fields should be read-only",
+    "security": false
+   },
+   "S5443": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Temporary files should not be created in publicly writable directories",
+    "security": true
+   },
+   "S6959": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"Array.reduce()\" calls should include an initial value",
+    "security": false
+   },
+   "S6564": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Redundant type aliases should not be used",
+    "security": false
+   },
+   "S5843": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Regular expressions should not be too complicated",
+    "security": false
+   },
+   "S7639": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Wallet phrases should not be hard-coded",
+    "security": true
+   },
+   "S5876": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "A new session should be created during user authentication",
+    "security": true
+   },
+   "S6397": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Character classes in regular expressions should not contain only one character",
+    "security": false
+   },
+   "S6035": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Single-character alternations in regular expressions should be replaced with character classes",
+    "security": false
+   },
+   "S5852": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Regular expressions should not cause catastrophic backtracking",
+    "security": true
+   },
+   "S2077": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "SQL queries should not be dynamically formatted",
+    "security": true
+   },
+   "S5973": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Tests should be stable",
+    "security": false
+   },
+   "S6351": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Regular expressions with the global flag should be used with caution",
+    "security": false
+   },
+   "S5739": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "HTTP Strict-Transport-Security policy should not be disabled",
+    "security": true
+   },
+   "S8786": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Regular expressions should not cause non-linear backtracking",
+    "security": false
+   },
+   "S9072": {
+    "type": "BUG",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Synchronous exception assertions should receive synchronous callbacks",
+    "security": false
+   },
+   "S8785": {
+    "type": "BUG",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Tests should not be registered asynchronously in suite callbacks",
+    "security": false
+   },
+   "S5256": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Tables should have headers",
+    "security": false
+   },
+   "S5260": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Table cells should reference their headers",
+    "security": false
+   },
+   "S5958": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Tests should check which exception is thrown",
+    "security": false
+   },
+   "S9153": {
+    "type": "BUG",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Testing Library disappearance waits should use non-throwing queries",
+    "security": false
+   },
+   "S9027": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "Testing Library queries should match presence assertions",
+    "security": false
+   },
+   "S1135": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Track uses of \"TODO\" tags",
+    "security": false
+   },
+   "S1128": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Unnecessary imports should be removed",
+    "security": false
+   },
+   "S5860": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Names of regular expressions named groups should be used",
+    "security": false
+   },
+   "S4830": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Server certificates should be verified during SSL/TLS connections",
+    "security": true
+   },
+   "S5527": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Server hostnames should be verified during SSL/TLS connections",
+    "security": true
+   },
+   "S3500": {
+    "type": "BUG",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"const\" variables should not be reassigned",
+    "security": false
+   },
+   "S2310": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Loop counters should not be assigned within the loop body",
+    "security": false
+   },
+   "S4323": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Type aliases should be used",
+    "security": false
+   },
+   "S9169": {
+    "type": "CODE_SMELL",
+    "scope": "Tests",
+    "sonar_way": true,
+    "title": "vi.mock should be declared at module scope",
+    "security": false
+   },
+   "S3735": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "\"void\" should not be used",
+    "security": false
+   },
+   "S4423": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Weak SSL/TLS protocols should not be used",
+    "security": true
+   },
+   "S5689": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Web application technologies should not disclose version information",
+    "security": true
+   },
+   "S2755": {
+    "type": "VULNERABILITY",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "XML parsers should not be vulnerable to XXE attacks",
+    "security": true
+   },
+   "S107": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Functions should not have too many parameters",
+    "security": false
+   }
+  },
+  "generic": {
+   "S3776": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Cognitive Complexity of methods should not be too high",
+    "security": false
+   },
+   "S107": {
+    "type": "CODE_SMELL",
+    "scope": "Main",
+    "sonar_way": true,
+    "title": "Methods should not have too many parameters",
+    "security": false
+   }
+  }
+ }
+}
