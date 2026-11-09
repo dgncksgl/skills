@@ -1,0 +1,4 @@
+[project]
+name="p1"
+version="0"
+requires-python=">=3.11"

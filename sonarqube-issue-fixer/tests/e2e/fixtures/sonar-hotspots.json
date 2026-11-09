@@ -1,0 +1,1 @@
+{"hotspots":[{"key":"H1","component":"com.example:shop-service:src/main/java/a/A.java","securityCategory":"weak-cryptography","ruleKey":"java:S4790","line":7,"message":"Make sure this weak hash algorithm is not used in a sensitive context here."}]}

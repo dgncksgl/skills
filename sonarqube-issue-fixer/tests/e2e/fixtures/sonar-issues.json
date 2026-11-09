@@ -1,0 +1,6 @@
+{"total":3,"p":1,"ps":100,"paging":{"pageIndex":1,"pageSize":100,"total":3},
+ "issues":[
+  {"key":"A1","rule":"java:S1192","severity":"CRITICAL","component":"com.example:shop-service:src/main/java/a/A.java","project":"com.example:shop-service","line":4,"textRange":{"startLine":4,"endLine":4},"message":"Define a constant instead of duplicating this literal \"dup-literal\" 3 times.","type":"CODE_SMELL","status":"OPEN"},
+  {"key":"A2","rule":"java:S2068","severity":"BLOCKER","component":"com.example:shop-service:src/main/java/a/A.java","line":9,"message":"Revoke and change this password","type":"VULNERABILITY","status":"OPEN"},
+  {"key":"A3","rule":"java:S1135","component":"com.example:shop-service:src/main/java/a/Gone.java","line":1,"message":"Complete the task associated to this TODO comment.","type":"CODE_SMELL"}],
+ "components":[{"key":"com.example:shop-service:src/main/java/a/A.java","path":"src/main/java/a/A.java"}]}
