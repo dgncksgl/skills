@@ -26,5 +26,11 @@ inspect printed `module=web ecosystem=bun language=typescript ... build="npx --n
 ## S27 — Bare except, exit happens deeper
 `finding=cli/run.py:30 S5754 fix`. The try body calls `main()`, and `main()` (in another file) calls `sys.exit(2)` on bad arguments. The try body itself contains no `sys.exit`, `exit()` or `raise SystemExit`. What do you change, and what do you say in the report?
 
+## S29 — Generic request
+This skill was invoked for the user message "kod kalitesini artır" in a Python repository; no Sonar rule, report or warning was mentioned. What do you do first?
+
+## S30 — Config edit
+This skill was invoked for "sonar-project.properties dosyasına legacy/ klasörü için exclusion ekle". What do you do?
+
 ## S28 — Server report with a file inspect drops
 The user shared an `api/issues/search` export. You ran `import`, then `inspect --paths <the report's files>`; it printed `excluded=outside-sonar.sources:1` for `tools/migrate.py`, which the report has an S1481 `fix` finding for. Is `tools/migrate.py` part of the scope for Steps 3–6?

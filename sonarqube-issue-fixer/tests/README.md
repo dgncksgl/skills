@@ -2,9 +2,9 @@
 
 Read this when you change `scripts/sonar-fix.py`, `scripts/data/rules.json`, `SKILL.md` or the references, and need to show the skill still works. Nothing here is loaded when the skill runs.
 
-## Automated layers
+## Automated layers (no tokens)
 
-Run all of them with `bash tests/run_all.sh` (about 5 minutes; needs python3, uv, node/npm and git). It runs each layer with `python3` and, when present, macOS's `/usr/bin/python3` (3.9, the oldest supported).
+`bash tests/run_all.sh` (about 5 minutes; needs python3, uv, node/npm and git) runs each layer with `python3` and, when present, macOS's `/usr/bin/python3` (3.9, the oldest supported).
 
 | Layer | File | What it proves |
 |---|---|---|
@@ -15,17 +15,16 @@ Run all of them with `bash tests/run_all.sh` (about 5 minutes; needs python3, uv
 
 Work folders go to `$WORK` or the system temp folder, never into the repository. Point `SONARFIX_SCRIPT` at another copy of the script to test it instead.
 
-## Live runs (by hand, with agents)
+## Agent layers (spend tokens)
 
-These check that an agent following SKILL.md fixes real projects without breaking them.
+`bash tests/agents/run_agents.sh <triggers|scenarios|live|all> [model]` runs headless Claude Code (`claude -p`, default model `sonnet`). User settings and their hooks are left out (`--setting-sources project,local`) so they cannot steer the answers; skills come from a sandbox copy of the sibling skills. Results and the agents' answers stay in `$WORK` (printed at the end).
 
-1. `python3 tests/live/build.py` builds three git projects with seeded issues and traps: `orders` (Python, uv), `pricing` (JavaScript, `node --test`) and `reportfix` (Python, fixed from a SonarQube export).
-2. Give each project to a fresh agent with the skill, one model per project, with this prompt:
+| Layer | Files | What it proves |
+|---|---|---|
+| `triggers` | `behavior/triggers.json` | For 16 messages (8 Sonar requests, 8 near misses such as type warnings, formatting, a security review, a config edit), whether the model picks this skill |
+| `scenarios` | `behavior/scenarios-1.md` (S1–S19), `behavior/scenarios-2.md` (S20–S30) | An agent given only the skill (never the keys) answers each situation; a second call grades it against `key-1.md` / `key-2.md`, written before any run |
+| `live` | `live/build.py`, `live/check.py` | An agent follows the skill end to end on three seeded git projects: `orders` (Python, uv), `pricing` (JavaScript, `node --test`), `reportfix` (Python, fixed from a SonarQube export); `check.py` then demands no commit, green tests, only the expected file changed, no suppression, no `fix` finding left and every decision (passwords, SQL, `eval`, async bare `except`, side-effect import, public signatures) untouched |
 
-   > You are acting as Claude Code helping a developer. The project is at `<path>`. The user's message is: "bütün projede sonar sorunlarını çöz" (for `reportfix`: "SonarQube raporunu indirdim, şu dosyalarda: `<work>/reportfix-issues.json` ve `<work>/reportfix-hotspots.json`. Bu rapordaki sorunları düzelt."). A skill applies to this request: `~/.claude/skills/sonarqube-issue-fixer`. Read its SKILL.md first and follow it exactly. Work only inside the project folder and your own scratch folder. The user is away until you finish; anything the skill says to collect for the user goes into your final report. Never commit, push, stash or reset. Reply with the final report the skill describes, in Turkish.
+The live layer lets the agent run shell commands and edit files inside its temp project (`--permission-mode acceptEdits --allowedTools "Bash Read Edit Write Grep Glob"`); run it yourself, not from an unattended job. `python3 tests/live/check.py <name>` on an untouched project must fail, which is how the checker itself is tested.
 
-3. `python3 tests/live/check.py <orders|pricing|reportfix>` checks the result: no commit, tests still pass, only the expected file changed, no suppression added, every `fix` finding gone, every decision (passwords, SQL, `eval`, async bare `except`, side-effect import, public signatures) left untouched. On an untouched project it must fail.
-
-## Behaviour scenarios (by hand, with agents)
-
-`behavior/scenarios-1.md` (S1–S19) and `behavior/scenarios-2.md` (S20–S28) are situations an agent meets while using the skill; `key-1.md` and `key-2.md` are the answers, written before any run. Give a fresh agent the skill and one scenario file, never the key, and ask for its actions in order with the skill sentences it relies on and any ambiguity it sees. Score against the key; a real ambiguity that two models resolve differently is a gap in the skill text.
+Results on 2026-11-09: triggers 16/16 on sonnet and opus, 14/16 on haiku (it still picks this skill for "kod kalitesini artır" and a `sonar-project.properties` edit; the skill's first paragraph then tells it to offer the workflow or make the plain edit instead, scenarios S29–S30); scenarios 30/30 on haiku, sonnet and opus (the grader gave 0/11 to a set of deliberately wrong answers); live 3/3 projects passed when run as Claude Code subagents (orders on opus, pricing on sonnet, reportfix on haiku).

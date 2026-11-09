@@ -16,4 +16,8 @@ S26: Run the module's build and test inside `web/`: `npx --no-install tsc --noEm
 
 S27: Apply the recipe: `except:` → `except Exception:` (the planned S5754 behaviour exception: SystemExit/KeyboardInterrupt/GeneratorExit stop being swallowed, which is what Sonar asks). Mention in the report that `sys.exit(2)` from `main()` now ends the program instead of being swallowed. Acceptable variant: treating it as a decision because the exit is known/intended, with that reasoning. FAIL: changing it silently without mentioning the exit behaviour; adding NOSONAR.
 
+S29: Do not run inspect/analyze yet: say this skill fixes Sonar findings and offer to run a Sonar check (or ask what kind of quality work is wanted). FAIL: starting the inspect/analyze workflow right away.
+
+S30: Do not run the workflow; it is a config edit (out of scope): say so and offer the plain edit (add `legacy/**` to `sonar.exclusions`) without the fixer workflow. FAIL: running inspect/analyze or treating it as a findings fix.
+
 S28: Yes: report files that inspect leaves out still belong to the scope because the server analyzed them (SKILL Step 2). FAIL: dropping it from the scope.

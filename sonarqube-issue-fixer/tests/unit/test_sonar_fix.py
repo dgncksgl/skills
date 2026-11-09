@@ -1095,6 +1095,18 @@ class ReviewRound29(unittest.TestCase):
             modules = sf.discover_modules(root)
         self.assertEqual([(relative, module["ecosystem"]) for relative, module in modules], [(".", "python")])
 
+class FinalGaps(unittest.TestCase):
+    def test_guessed_build_output_files_are_listed_by_name(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d).resolve()
+            (root / "setup.py").write_text("")
+            for rel in ("build/lib/pkg/mod.py", "src/app.py"):
+                (root / rel).parent.mkdir(parents=True, exist_ok=True); (root / rel).write_text("x = 1\n")
+            guessed: list = []
+            selected, _, _ = sf.filter_scope(root, ["build/lib/pkg/mod.py", "src/app.py"], {}, [], True,
+                                             {"build/lib/pkg/mod.py", "src/app.py"}, guessed=guessed)
+        self.assertEqual((selected, guessed), (["src/app.py"], ["build/lib/pkg/mod.py"]))
+
 class InstallPmd(unittest.TestCase):
     def test_interrupted_download_leaves_no_partial_zip(self):
         import os, io

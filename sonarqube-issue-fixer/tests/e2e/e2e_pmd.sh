@@ -72,4 +72,9 @@ grep -q 'C.java:4 S1481' <<<"$O" || { echo "FAIL: PMD skipped a project whose pa
 mkdir -p "$C/src/main/java/a,b"; printf 'package a;\nclass D {\n    int f() {\n        int temp = 1;\n        return 0;\n    }\n}\n' > "$C/src/main/java/a,b/D.java"
 O=$(cd "$C" && $PY $S analyze . "src/main/java/a,b/D.java" 2>&1)
 grep -q 'a,b/D.java:4 S1481' <<<"$O" || { echo "FAIL: PMD skipped a file whose folder has a comma"; F=1; }
+printf 'package a;\nclass Names {\n    int f() {\n        int unusedLocal = 1;\n        int ignored = 2;\n        return 0;\n    }\n}\n' > $R/src/main/java/a/Names.java
+O=$(cd $R && $PY $S analyze . src/main/java/a/Names.java 2>&1)
+grep -q "Names.java:4 S1481 fix .*'unusedLocal'" <<<"$O" || { echo "FAIL: PMD skipped a local named unused* that SonarJava reports"; F=1; }
+grep -q "Names.java:5 S1481 fix .*'ignored'" <<<"$O" || { echo "FAIL: PMD skipped a local named ignored* that SonarJava reports"; F=1; }
+grep -q 'int unusedLocal = 1;' $R/src/main/java/a/Names.java || { echo "FAIL: source file was modified"; F=1; }
 echo "PMD e2e fail=$F"; exit $F

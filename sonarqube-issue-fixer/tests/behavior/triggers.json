@@ -1,0 +1,18 @@
+[
+  {"message": "sonar uyarılarını düzelt", "triggers": true},
+  {"message": "bu projede SonarQube issue'larını çöz", "triggers": true},
+  {"message": "S1192 hatalarını gider, aynı string birçok yerde tekrar ediyor", "triggers": true},
+  {"message": "SonarCloud raporundaki code smell'leri temizle", "triggers": true},
+  {"message": "Fix the Sonar warnings in src/billing", "triggers": true},
+  {"message": "sonar cognitive complexity 15'i geçiyor diyor, karmaşıklığı azalt", "triggers": true},
+  {"message": "Here is our SonarQube export (issues.json), please fix the issues in it", "triggers": true},
+  {"message": "bütün projede sonar'ı düzelt", "triggers": true},
+  {"message": "IDE'de Expected type 'str', got 'int' uyarısı var, düzelt", "triggers": false},
+  {"message": "bu branch'teki değişikliklerde güvenlik açığı var mı, bir güvenlik incelemesi yap", "triggers": false},
+  {"message": "kodu prettier ile formatla", "triggers": false},
+  {"message": "pom.xml'deki dependency sürümlerini güncelle", "triggers": false},
+  {"message": "kod kalitesini artır", "triggers": false},
+  {"message": "README'deki yazım hatalarını düzelt", "triggers": false},
+  {"message": "write a unit test for the price calculator", "triggers": false},
+  {"message": "sonar-project.properties dosyasına yeni bir exclusion ekle", "triggers": false}
+]

@@ -1,13 +1,13 @@
 ---
 name: sonarqube-issue-fixer
-description: "Finds and fixes SonarQube issues (bugs, vulnerabilities, code smells, cognitive complexity) in Python, Java, Kotlin, JavaScript, TypeScript, Go, C# and other languages, using a SonarQube report or pinned local analyzers mapped to Sonar rule IDs, without changing behaviour. Use when the user asks to fix Sonar warnings or SonarQube/SonarCloud issues, clean up static analysis, reduce cognitive or cyclomatic complexity, shares a Sonar report, names a rule ID such as S1192, S3776, S2068 or S1481, or says \"sonar sorunlarını çöz\", \"sonar uyarılarını düzelt\", \"sonarqube issue'larını çöz\", \"kod kokularını gider\", \"statik analiz uyarılarını temizle\", \"karmaşıklığı azalt\", \"bütün projede sonar'ı düzelt\". Use proactively after an implementation or refactor step, on the changed files only. Do not use for pure formatting or import ordering, for IDE type warnings (type-safety-fixer), for a security audit of pending changes (/security-review), or for editing config or markup files (XML, YAML, JSON, Markdown)."
+description: "Finds and fixes SonarQube issues in Python, Java, Kotlin, JavaScript, TypeScript and more, from a SonarQube report or pinned local analyzers, without changing behaviour. Use when the user asks to fix Sonar warnings or SonarQube/SonarCloud issues, clean up static analysis, reduce cognitive complexity, shares a Sonar report, names a rule ID such as S1192, S3776, S2068 or S1481, or says \"sonar sorunlarını çöz\", \"sonar uyarılarını düzelt\", \"sonarqube issue'larını çöz\", \"kod kokularını gider\", \"statik analiz uyarılarını temizle\", \"karmaşıklığı azalt\", \"bütün projede sonar'ı düzelt\". Use proactively after an implementation or refactor step, on the changed files only. Do not use for a general code-quality request that names no Sonar rule, report or warning, for pure formatting or import ordering, for IDE type warnings (type-safety-fixer), for a security audit of pending changes (/security-review), or for editing config or markup files (sonar-project.properties, XML, YAML, JSON, Markdown)."
 ---
 
 # SonarQube Issue Fixer
 
 ## Overview
 
-Fixes Sonar findings that a SonarQube report or a pinned analyzer produced. Code is read for findings only through the manual checklist, for languages the tools do not cover. Scripts live in `<skill-dir>/scripts/` (`<skill-dir>`: this skill's base directory, usually `~/.claude/skills/sonarqube-issue-fixer`); run them with `python3`.
+Fixes Sonar findings that a SonarQube report or a pinned analyzer produced. Code is read for findings only through the manual checklist, for languages the tools do not cover. `<skill-dir>` is this skill's base directory. Invoked only to edit Sonar configuration? Make that edit without this workflow. Invoked for a request naming no Sonar rule, report or warning? Offer this workflow instead of running it.
 
 ## Core Rules
 
@@ -33,12 +33,12 @@ Run `python3 <skill-dir>/scripts/sonar-fix.py inspect <project-dir> <flags> --ou
 | "Whole project", "bütün projede", "tüm proje" | `--scope all` |
 | Named files or folders | `--paths <p> ...` |
 
-Test files inside the scope are kept; `analyze` applies only the rules Sonar runs on tests. `scope_files=0` → say there is nothing to fix and offer `--scope all`. `error=` (no git) → ask for `--scope all` or `--paths`. `git=dirty:<n>` with `--scope all` → ask the user to commit or stash first; if they decline, save `git diff HEAD` and `git status --porcelain --untracked-files=all` to the scratchpad before editing, and report your edits apart from theirs. Each `module=` line holds that module's `build` and `test` commands, run inside its directory. `generated_files=` lists files left out as generated; append a clearly hand-written one to the scope list.
+Test files inside the scope are kept; `analyze` applies only the rules Sonar runs on tests. `scope_files=0` → say there is nothing to fix and offer `--scope all`. `error=` (no git) → ask for `--scope all` or `--paths`. `git=dirty:<n>` with `--scope all` → ask the user to commit or stash first; if they decline, save `git diff HEAD` and `git status --porcelain --untracked-files=all` to the scratchpad before editing, and report your edits apart from theirs. Each `module=` line holds that module's `build` and `test` commands, run inside its directory. `generated_files=` and `guessed_build_files=` list files left out on a guess; append a clearly hand-written one to the scope list.
 
 ### Step 2: Collect findings
 
 - **Sonar report given:** API or JSON export → fetch and convert it per [Tools](references/tools.md); a list pasted from the UI → use it as the findings list. Then run inspect again with `--paths <the report's files>`: that list, with any report file it leaves out appended (the server analyzed it), is the scope for Steps 3–6. No token, or the server is unreachable → say so and offer the local `analyze` instead.
-- **No report:** run `python3 <skill-dir>/scripts/sonar-fix.py analyze <project-dir> --files-from <scratchpad>/scope.txt --out <scratchpad>/findings.json`. The first run downloads the pinned uvx and npm analyzers into the cache on its own; only PMD asks first.
+- **No report:** run `python3 <skill-dir>/scripts/sonar-fix.py analyze <project-dir> --files-from <scratchpad>/scope.txt --out <scratchpad>/findings.json`.
   - `note=java: PMD is not installed` → ask once per session; yes → `sonar-fix.py install-pmd` and analyze again; no → continue.
   - `review=<language>` (and Java without PMD) → read those scope files once against the checklist in [Rules](references/rules.md); record each hit with file, line and rule, marked "found by reading".
   - `error=` → that tool's files were not analyzed: never report them as clean; say so, and offer the checklist or a retry.
@@ -61,7 +61,7 @@ Order: bugs, then `fix` code smells, then `check-api` items that pass the Core R
 
 ### Step 6: Loop until clean
 
-Repeat Steps 4–5 until `analyze` shows no `fix` finding you still intend to fix, at most 5 rounds. False positives, user-declined findings and fixes that would change behaviour are out of the loop. Do not stop to ask whether to continue. Findings that would need a behaviour change are decisions; other `fix` findings still open after round 5 go to the report as left at the round limit.
+Repeat Steps 4–5 until `analyze` shows no `fix` finding you still intend to fix, at most 5 rounds. False positives, user-declined findings and fixes that would change behaviour are out of the loop. Do not ask whether to continue. Findings that would need a behaviour change are decisions; other `fix` findings still open after round 5 go to the report as left at the round limit.
 
 ### Step 7: Report
 

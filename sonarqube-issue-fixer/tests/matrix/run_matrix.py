@@ -642,6 +642,7 @@ def g1_git_states(c):
     write(root, {"bin/new_tool.py": "VALUE = 3\n"})
     out, _, _ = run(root, "inspect", ".", "--base", "base")
     c.grep("new untracked bin/ folder guessed as build output", out, r"scope_files=1 .*\n.*\nexcluded=dependency-or-build-dir:1")
+    c.grep("guessed build output named", out, r"^guessed_build_files=bin/new_tool\.py$")
 
 
 # ---------------------------------------------------------------- import
